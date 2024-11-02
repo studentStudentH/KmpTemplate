@@ -138,3 +138,7 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio
 
 .DS_Store
+
+# kotlin 2.0以降、ビルド時自動生成されるファイルを除外
+# https://github.com/spring-io/initializr/issues/1501
+.kotlin/
