@@ -1,4 +1,5 @@
 import SwiftUI
+import Root
 
 @main
 struct iOSApp: App {
