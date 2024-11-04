@@ -3809,7 +3809,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/..\"\n# ./gradlew assembleXCFramework\n";
+			shellScript = "cd \"$SRCROOT/..\"\n\n# homebrew経由でmintをインストールしていたケースへ対応\nexport PATH=$PATH:/opt/homebrew/bin/\necho $PATH\nmint run swiftlint lint\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
