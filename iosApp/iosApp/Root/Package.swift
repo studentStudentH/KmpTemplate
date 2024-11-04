@@ -10,7 +10,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Root",
-            targets: ["Root"]),
+            targets: ["Root"])
     ],
     dependencies: [
         .package(path: "../KmpShared")
@@ -21,6 +21,6 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: ["KmpShared"]
-        ),
+        )
     ]
 )
