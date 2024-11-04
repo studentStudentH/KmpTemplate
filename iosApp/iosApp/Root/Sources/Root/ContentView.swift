@@ -10,7 +10,7 @@ import shared
 
 public struct ContentView: View {
     public init () {} // 他Packageからアクセスするために必要
-    
+
     private let greet = Greeting().greet()
 
     public var body: some View {
