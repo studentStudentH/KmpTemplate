@@ -58,8 +58,6 @@ android {
 
 buildkonfig {
     packageName = "com.example.kmptemplate"
-    // objectName = "YourAwesomeConfig"
-    // exposeObjectWithName = "YourAwesomePublicConfig"
 
     defaultConfigs {
         buildConfigField(STRING, "name", "value")
