@@ -10,8 +10,9 @@ val shareDiModule: Module = module {
     single<SampleRepository> {
         if (BuildKonfigFlavor.getInstance() == BuildKonfigFlavor.RELEASE) {
             ReleaseSampleRepositoryImpl()
+        } else {
+            DevSampleRepositoryImpl()
         }
-        DevSampleRepositoryImpl()
     }
 }
 
