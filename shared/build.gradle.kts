@@ -60,6 +60,12 @@ buildkonfig {
     packageName = "com.example.kmptemplate"
 
     defaultConfigs {
-        buildConfigField(STRING, "name", "value")
+        buildConfigField(STRING, "flavor", "dev")
+    }
+    defaultConfigs("dev") {
+        buildConfigField(STRING, "flavor", "dev")
+    }
+    defaultConfigs("release") {
+        buildConfigField(STRING, "flavor", "release")
     }
 }
