@@ -1,11 +1,13 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.skiePlugin)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.buildKonfig)
 }
 
 kotlin {
@@ -51,5 +53,15 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+buildkonfig {
+    packageName = "com.example.kmptemplate"
+    // objectName = "YourAwesomeConfig"
+    // exposeObjectWithName = "YourAwesomePublicConfig"
+
+    defaultConfigs {
+        buildConfigField(STRING, "name", "value")
     }
 }
