@@ -2,6 +2,7 @@ package com.example.kmptemplate.android
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.repository.SampleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,13 +16,14 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            val result = sampleRepository.getSampleSentences()
-            result.onSuccess { listHolder ->
-                _sampleData.value = listHolder.list
-            }
-            result.onFailure { exception ->
-                val errorMsg = exception.message ?: "no error msg"
-                _sampleData.value = listOf(errorMsg)
+            val result = sampleRepository.getSampleWords()
+            when(result) {
+                is KmpResult.Failure -> {
+                    _sampleData.value = listOf(result.error.msg)
+                }
+                is KmpResult.Success -> {
+                    _sampleData.value = result.value.list
+                }
             }
         }
     }
