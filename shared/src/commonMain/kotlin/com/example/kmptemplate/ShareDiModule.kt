@@ -6,19 +6,21 @@ import com.example.kmptemplate.repository.SampleRepository
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val shareDiModule: Module = module {
-    single<SampleRepository> {
-        if (BuildKonfigFlavor.getInstance() == BuildKonfigFlavor.RELEASE) {
-            ReleaseSampleRepositoryImpl()
-        } else {
-            DevSampleRepositoryImpl()
+val shareDiModule: Module =
+    module {
+        single<SampleRepository> {
+            if (BuildKonfigFlavor.getInstance() == BuildKonfigFlavor.RELEASE) {
+                ReleaseSampleRepositoryImpl()
+            } else {
+                DevSampleRepositoryImpl()
+            }
         }
     }
-}
 
 private enum class BuildKonfigFlavor {
     DEV,
-    RELEASE;
+    RELEASE,
+    ;
 
     companion object {
         fun getInstance(): BuildKonfigFlavor {

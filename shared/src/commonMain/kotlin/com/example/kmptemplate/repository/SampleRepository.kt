@@ -10,7 +10,7 @@ interface SampleRepository {
     suspend fun getSampleWords(): KmpResult<ListHolder<String>>
 }
 
-internal class DevSampleRepositoryImpl: SampleRepository {
+internal class DevSampleRepositoryImpl : SampleRepository {
     override suspend fun getSampleWords(): KmpResult<ListHolder<String>> {
         // 通信遅延の表現
         delay(5.0.toDuration(DurationUnit.SECONDS))
@@ -19,7 +19,7 @@ internal class DevSampleRepositoryImpl: SampleRepository {
     }
 }
 
-internal class ReleaseSampleRepositoryImpl: SampleRepository {
+internal class ReleaseSampleRepositoryImpl : SampleRepository {
     override suspend fun getSampleWords(): KmpResult<ListHolder<String>> {
         // 通信遅延の表現
         delay(5.0.toDuration(DurationUnit.SECONDS))
