@@ -34,6 +34,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // put your multiplatform dependencies here
+            implementation(libs.kotlinx.coroutines.core)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
         }
@@ -60,6 +61,12 @@ buildkonfig {
     packageName = "com.example.kmptemplate"
 
     defaultConfigs {
-        buildConfigField(STRING, "name", "value")
+        buildConfigField(STRING, "flavor", "dev")
+    }
+    defaultConfigs("dev") {
+        buildConfigField(STRING, "flavor", "dev")
+    }
+    defaultConfigs("release") {
+        buildConfigField(STRING, "flavor", "release")
     }
 }
