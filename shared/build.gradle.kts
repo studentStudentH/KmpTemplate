@@ -34,6 +34,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // put your multiplatform dependencies here
+            implementation(libs.kotlinx.coroutines.core)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
         }
