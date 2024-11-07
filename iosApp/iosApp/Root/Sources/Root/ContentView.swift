@@ -7,9 +7,12 @@
 
 import SwiftUI
 @preconcurrency import shared
+import KmpShared
 
 public struct ContentView: View {
     public init () {} // 他Packageからアクセスするために必要
+
+    private let tag = "ContentView"
 
     private let sampleRepository = DiContainer.shared.sampleRepository
 
@@ -22,6 +25,8 @@ public struct ContentView: View {
             }
         }.task {
             await loadData()
+        }.task {
+            KermitLoggerKt.d(tag: tag) { "show body" }
         }
     }
 
