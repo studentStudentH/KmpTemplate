@@ -27,6 +27,9 @@ public struct ContentView: View {
             await loadData()
         }.task {
             KermitLoggerKt.d(tag: tag) { "show body" }
+        }.task {
+            let localDateTime = getCurrentTime().toSystemLocalDateTime()
+            KermitLoggerKt.d(tag: tag) { "localDateTime = \(localDateTime.dateTimeFormat())" }
         }
     }
 

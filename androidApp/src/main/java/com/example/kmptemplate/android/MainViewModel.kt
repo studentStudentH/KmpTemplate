@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.repository.SampleRepository
 import com.example.kmptemplate.util.KermitLogger
+import com.example.kmptemplate.util.dateTimeFormat
+import com.example.kmptemplate.util.getCurrentTime
+import com.example.kmptemplate.util.toSystemLocalDateTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,6 +20,8 @@ class MainViewModel(
 
     init {
         KermitLogger.d(TAG) { "init" }
+        val localDateTime = getCurrentTime().toSystemLocalDateTime()
+        KermitLogger.d(TAG) { "localDateTime = ${localDateTime.dateTimeFormat()}" }
         viewModelScope.launch {
             val result = sampleRepository.getSampleWords()
             when (result) {
