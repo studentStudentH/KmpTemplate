@@ -20,19 +20,23 @@ fun Instant.toSystemLocalDateTime(): LocalDateTime {
     return this.toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
-private val customDateTimeFormat = LocalDateTime.Format {
-    date(LocalDate.Formats.ISO)
-    char(' ')
-    hour(); char(':'); minute()
-}
+private val customDateTimeFormat =
+    LocalDateTime.Format {
+        date(LocalDate.Formats.ISO)
+        char(' ')
+        hour()
+        char(':')
+        minute()
+    }
 
 fun LocalDateTime.dateTimeFormat(): String {
     return this.format(customDateTimeFormat)
 }
 
-private val customDateFormat = LocalDateTime.Format {
-    date(LocalDate.Formats.ISO)
-}
+private val customDateFormat =
+    LocalDateTime.Format {
+        date(LocalDate.Formats.ISO)
+    }
 
 fun LocalDateTime.dateFormat(): String {
     return this.format(customDateFormat)
