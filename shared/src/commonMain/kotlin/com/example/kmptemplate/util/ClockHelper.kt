@@ -20,6 +20,7 @@ fun Instant.toSystemLocalDateTime(): LocalDateTime {
     return this.toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
+// 参考: https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime/format.html
 private val customDateTimeFormat =
     LocalDateTime.Format {
         date(LocalDate.Formats.ISO)
