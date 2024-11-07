@@ -2,7 +2,7 @@ package com.example.kmptemplate
 
 import org.koin.core.context.startKoin
 
-fun initKoin()  {
+fun initKoin() {
     startKoin {
         modules(shareDiModule)
     }
