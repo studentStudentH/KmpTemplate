@@ -8,11 +8,12 @@ import kotlin.test.assertFails
 class ReceiptTest {
     @Test
     fun test() {
-        val receipt = Receipt(
-            10,
-            "category",
-            Clock.System.now()
-        )
+        val receipt =
+            Receipt(
+                10,
+                "category",
+                Clock.System.now(),
+            )
         assertFails("支払った値段がマイナスなのに例外を吐きませんでした") {
             receipt.copy(cost = -10)
         }

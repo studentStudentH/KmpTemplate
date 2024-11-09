@@ -37,16 +37,18 @@ data class ReceiptCollection(
      */
     fun getPrevYearMonth(): YearMonth {
         val firstLocalDateTime = firstInstant.toSystemLocalDateTime()
-        val year = if (firstLocalDateTime.monthNumber == 1) {
-            firstLocalDateTime.year - 1
-        } else {
-            firstLocalDateTime.year
-        }
-        val month = if (firstLocalDateTime.monthNumber == 1) {
-            12
-        } else {
-            firstLocalDateTime.monthNumber - 1
-        }
+        val year =
+            if (firstLocalDateTime.monthNumber == 1) {
+                firstLocalDateTime.year - 1
+            } else {
+                firstLocalDateTime.year
+            }
+        val month =
+            if (firstLocalDateTime.monthNumber == 1) {
+                12
+            } else {
+                firstLocalDateTime.monthNumber - 1
+            }
         return YearMonth(year, month)
     }
 
@@ -55,16 +57,18 @@ data class ReceiptCollection(
      */
     fun getNextYearMonth(): YearMonth {
         val lastLocalDateTime = lastInstant.toSystemLocalDateTime()
-        val year = if (lastLocalDateTime.monthNumber == 12) {
-            lastLocalDateTime.year + 1
-        } else {
-            lastLocalDateTime.year
-        }
-        val month = if (lastLocalDateTime.monthNumber == 12) {
-            1
-        } else {
-            lastLocalDateTime.monthNumber + 1
-        }
+        val year =
+            if (lastLocalDateTime.monthNumber == 12) {
+                lastLocalDateTime.year + 1
+            } else {
+                lastLocalDateTime.year
+            }
+        val month =
+            if (lastLocalDateTime.monthNumber == 12) {
+                1
+            } else {
+                lastLocalDateTime.monthNumber + 1
+            }
         return YearMonth(year, month)
     }
 }
