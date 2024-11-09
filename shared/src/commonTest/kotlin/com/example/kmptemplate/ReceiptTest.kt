@@ -10,6 +10,7 @@ class ReceiptTest {
     fun test() {
         val receipt =
             Receipt(
+                0,
                 10,
                 "category",
                 Clock.System.now(),
