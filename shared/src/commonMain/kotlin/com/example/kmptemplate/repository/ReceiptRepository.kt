@@ -8,14 +8,14 @@ import kotlinx.datetime.Instant
 interface ReceiptRepository {
     suspend fun getReceiptsNewerThan(
         year: Int,
-        month: Int
+        month: Int,
     ): KmpResult<ReceiptCollection>
 
     suspend fun getReceiptsBetween(
         oldestYear: Int,
         oldestMonth: Int,
         newestYear: Int,
-        newestMonth: Int
+        newestMonth: Int,
     ): KmpResult<ReceiptCollection>
 
     /**
@@ -31,7 +31,7 @@ interface ReceiptRepository {
         id: Int,
         cost: Int,
         category: String,
-        createdAt: Instant
+        createdAt: Instant,
     ): KmpResult<Receipt>
 
     suspend fun delete(id: Int): KmpResult<Receipt>
