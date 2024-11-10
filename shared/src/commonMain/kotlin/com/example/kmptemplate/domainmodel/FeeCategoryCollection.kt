@@ -27,4 +27,9 @@ data class FeeCategoryCollection
         fun hasSameName(newName: String): Boolean {
             return value.any { it.name == newName }
         }
+
+        @Throws(IllegalArgumentException::class)
+        fun add(feeCategory: FeeCategory): FeeCategoryCollection {
+            return FeeCategoryCollection(value + feeCategory)
+        }
     }
