@@ -18,4 +18,14 @@ interface FeeCategoryRepository {
      * 返り値は最新のすべてのFeeCategoryの一覧ß
      */
     suspend fun updateLastUsedTime(name: String): KmpResult<FeeCategoryCollection>
+
+    /**
+     * 既存のカテゴリのカテゴリ名を修正する。oldNameが登録されていなかった場合はエラーß
+     */
+    suspend fun renameCategory(oldName: String, newName: String): KmpResult<FeeCategoryCollection>
+
+    /**
+     * 既存のカテゴリを削除する。そのカテゴリが登録されていなかった場合はエラー
+     */
+    suspend fun deleteCategory(name: String): KmpResult<FeeCategoryCollection>
 }
