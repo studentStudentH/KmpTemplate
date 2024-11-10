@@ -1,6 +1,7 @@
 package com.example.kmptemplate.android
 
 import android.app.Application
+import com.example.kmptemplate.makePlatformModule
 import com.example.kmptemplate.shareDiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -12,7 +13,11 @@ class MainApplication() : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(shareDiModule, appDiModule)
+            modules(
+                shareDiModule,
+                makePlatformModule(this@MainApplication),
+                appDiModule
+            )
         }
     }
 }
