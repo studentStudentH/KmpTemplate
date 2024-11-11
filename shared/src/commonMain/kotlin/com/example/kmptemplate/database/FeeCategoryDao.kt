@@ -11,7 +11,7 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 @Dao
 interface FeeCategoryDao {
     @Query("SELECT * FROM FeeCategory")
-    suspend fun getAll(): List<FeeCategory>
+    suspend fun loadAll(): List<FeeCategory>
 
     @Insert(onConflict =OnConflictStrategy.IGNORE)
     suspend fun insert(vararg feeCategories: FeeCategory)

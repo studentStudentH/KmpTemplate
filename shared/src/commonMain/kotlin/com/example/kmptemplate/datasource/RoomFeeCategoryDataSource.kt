@@ -13,7 +13,7 @@ class RoomFeeCategoryDataSource(
 ): FeeCategoryDataSource  {
     override suspend fun getAllCategory(): KmpResult<List<FeeCategory>> {
         try {
-            val list = feeCategoryDao.getAll()
+            val list = feeCategoryDao.loadAll()
             return KmpResult.Success(list)
         } catch(e: Exception) {
             return KmpResult.Failure(KmpError.ServerError(e.message ?: "不明なエラーです"))
