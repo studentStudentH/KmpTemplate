@@ -61,6 +61,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    ktlint {
+        filter {
+            // 普通のパターンマッチはうまく動かないらしい(↓参考)
+            // https://github.com/JLLeitschuh/ktlint-gradle/issues/522
+            exclude { entry ->
+                entry.file.toString().contains("generated")
+            }
+        }
+    }
 }
 
 dependencies {
