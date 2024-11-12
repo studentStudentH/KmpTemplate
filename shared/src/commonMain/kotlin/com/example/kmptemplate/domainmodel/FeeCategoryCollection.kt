@@ -3,7 +3,7 @@ package com.example.kmptemplate.domainmodel
 data class FeeCategoryCollection
     @Throws(IllegalArgumentException::class)
     constructor(
-        val value: List<FeeCategory>,
+        private val value: List<FeeCategory>,
     ) {
         init {
             if (value.isEmpty()) {
