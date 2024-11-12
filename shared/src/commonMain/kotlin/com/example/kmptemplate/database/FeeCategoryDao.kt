@@ -17,9 +17,9 @@ interface FeeCategoryDao {
     suspend fun loadAll(): List<FeeCategory>
 
     @Query("SELECT * FROM FeeCategory WHERE name IN (:names)")
-    fun loadByNames(names: List<String>): List<FeeCategory>
+    suspend fun loadByNames(names: List<String>): List<FeeCategory>
 
-    @Insert(onConflict =OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(feeCategories: List<FeeCategory>)
 
     @Update
