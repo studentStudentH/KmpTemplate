@@ -17,7 +17,7 @@ internal val platformModule: Module =
         }
     }
 
-fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
+private fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     val dbFilePath = documentDirectory() + "/my_room.db"
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,

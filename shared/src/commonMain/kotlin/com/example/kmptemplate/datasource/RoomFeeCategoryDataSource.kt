@@ -12,7 +12,7 @@ import kotlinx.datetime.Clock
 /**
  * ToDo: エラーハンドリングが適当すぎるのでちゃんとする
  */
-class RoomFeeCategoryDataSource(
+internal class RoomFeeCategoryDataSource(
     private val feeCategoryDao: FeeCategoryDao,
 ) : FeeCategoryDataSource {
     override suspend fun getAllCategory(): KmpResult<List<FeeCategory>> {

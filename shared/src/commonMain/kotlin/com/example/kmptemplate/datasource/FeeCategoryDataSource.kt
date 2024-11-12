@@ -3,7 +3,7 @@ package com.example.kmptemplate.datasource
 import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpResult
 
-interface FeeCategoryDataSource {
+internal interface FeeCategoryDataSource {
     suspend fun getAllCategory(): KmpResult<List<FeeCategory>>
 
     suspend fun addCategory(feeCategoryInputs: List<FeeCategoryInput>): KmpResult<List<FeeCategory>>

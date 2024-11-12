@@ -10,7 +10,7 @@ import com.example.kmptemplate.domainmodel.convertType
 import com.example.kmptemplate.util.KermitLogger
 import kotlinx.datetime.Clock
 
-class FeeCategoryRepositoryImpl(
+internal class FeeCategoryRepositoryImpl(
     private val dataSource: FeeCategoryDataSource,
 ) : FeeCategoryRepository {
     override suspend fun getAllCategory(): KmpResult<FeeCategoryCollection> {

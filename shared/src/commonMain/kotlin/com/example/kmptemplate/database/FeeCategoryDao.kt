@@ -9,7 +9,7 @@ import androidx.room.Update
 import com.example.kmptemplate.domainmodel.FeeCategory
 
 @Dao
-interface FeeCategoryDao {
+internal interface FeeCategoryDao {
     @Query("SELECT * FROM FeeCategory WHERE id = :categoryId")
     suspend fun loadById(categoryId: Int): FeeCategory
 

@@ -3,7 +3,7 @@ package com.example.kmptemplate.database
 import androidx.room.TypeConverter
 import kotlinx.datetime.Instant
 
-object InstantConverter {
+internal object InstantConverter {
     @TypeConverter
     fun longToInstant(value: Long): Instant {
         return Instant.fromEpochMilliseconds(value)
