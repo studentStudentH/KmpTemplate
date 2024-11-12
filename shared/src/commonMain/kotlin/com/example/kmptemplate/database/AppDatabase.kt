@@ -12,7 +12,7 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 @TypeConverters(
     InstantConverter::class,
 )
-abstract class AppDatabase : RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun getFeeCategoryDao(): FeeCategoryDao
 }
 

@@ -16,7 +16,7 @@ class MainApplication() : Application() {
             modules(
                 shareDiModule,
                 makePlatformModule(this@MainApplication),
-                appDiModule
+                appDiModule,
             )
         }
     }

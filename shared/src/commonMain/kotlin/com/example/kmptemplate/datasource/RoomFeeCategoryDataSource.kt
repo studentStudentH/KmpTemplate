@@ -13,27 +13,26 @@ import kotlinx.datetime.Clock
  * ToDo: エラーハンドリングが適当すぎるのでちゃんとする
  */
 class RoomFeeCategoryDataSource(
-    private val feeCategoryDao: FeeCategoryDao
-): FeeCategoryDataSource  {
+    private val feeCategoryDao: FeeCategoryDao,
+) : FeeCategoryDataSource {
     override suspend fun getAllCategory(): KmpResult<List<FeeCategory>> {
         return withContext(Dispatchers.IO) {
             try {
                 val list = feeCategoryDao.loadAll()
                 KmpResult.Success(list)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 KmpResult.Failure(KmpError.ServerError(e.message ?: "不明なエラーです"))
             }
         }
     }
 
-    override suspend fun addCategory(
-        feeCategoryInputs: List<FeeCategoryInput>,
-    ): KmpResult<List<FeeCategory>> {
+    override suspend fun addCategory(feeCategoryInputs: List<FeeCategoryInput>): KmpResult<List<FeeCategory>> {
         return withContext(Dispatchers.IO) {
             try {
-                val convertedItems = feeCategoryInputs.map {
-                    FeeCategory(name = it.name, lastUsedAt = it.lastUsedAt)
-                }
+                val convertedItems =
+                    feeCategoryInputs.map {
+                        FeeCategory(name = it.name, lastUsedAt = it.lastUsedAt)
+                    }
                 feeCategoryDao.insert(convertedItems)
                 val queryNames = feeCategoryInputs.map { it.name }
                 val addedItems = feeCategoryDao.loadByNames(queryNames)
@@ -57,7 +56,10 @@ class RoomFeeCategoryDataSource(
         }
     }
 
-    override suspend fun renameCategory(categoryId: Int, newName: String): KmpResult<FeeCategory> {
+    override suspend fun renameCategory(
+        categoryId: Int,
+        newName: String,
+    ): KmpResult<FeeCategory> {
         return withContext(Dispatchers.IO) {
             try {
                 val data = feeCategoryDao.loadById(categoryId)

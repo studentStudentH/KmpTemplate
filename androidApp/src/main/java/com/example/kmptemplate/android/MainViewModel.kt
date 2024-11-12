@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val sampleRepository: SampleRepository,
-    private val feeCategoryRepository: FeeCategoryRepository
+    private val feeCategoryRepository: FeeCategoryRepository,
 ) : ViewModel() {
     private val _sampleData = MutableStateFlow(listOf("requesting..."))
     val sampleData: StateFlow<List<String>> = _sampleData

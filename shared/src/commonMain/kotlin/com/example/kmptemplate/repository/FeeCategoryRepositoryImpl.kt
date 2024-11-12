@@ -11,8 +11,8 @@ import com.example.kmptemplate.util.KermitLogger
 import kotlinx.datetime.Clock
 
 class FeeCategoryRepositoryImpl(
-    private val dataSource: FeeCategoryDataSource
-): FeeCategoryRepository {
+    private val dataSource: FeeCategoryDataSource,
+) : FeeCategoryRepository {
     override suspend fun getAllCategory(): KmpResult<FeeCategoryCollection> {
         val result = dataSource.getAllCategory()
         when (result) {
@@ -28,7 +28,7 @@ class FeeCategoryRepositoryImpl(
             result.convertType {
                 FeeCategoryCollection(it)
             }
-        } catch(e: IllegalArgumentException) {
+        } catch (e: IllegalArgumentException) {
             val msg = e.message ?: "不明なエラーです"
             KmpResult.Failure(error = KmpError.IllegalArgumentError(msg))
         }
@@ -56,7 +56,7 @@ class FeeCategoryRepositoryImpl(
 
     override suspend fun renameCategory(
         categoryId: Int,
-        newName: String
+        newName: String,
     ): KmpResult<FeeCategory> {
         TODO("Not yet implemented")
     }

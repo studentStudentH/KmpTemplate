@@ -20,7 +20,10 @@ interface FeeCategoryDataSource {
      * 既存のカテゴリのカテゴリ名を修正する。oldNameが登録されていなかった場合はエラー
      * 返り値は更新後のカテゴリ
      */
-    suspend fun renameCategory(categoryId: Int, newName: String): KmpResult<FeeCategory>
+    suspend fun renameCategory(
+        categoryId: Int,
+        newName: String,
+    ): KmpResult<FeeCategory>
 
     suspend fun delete(feeCategories: List<FeeCategory>): KmpResult<Unit>
 }
