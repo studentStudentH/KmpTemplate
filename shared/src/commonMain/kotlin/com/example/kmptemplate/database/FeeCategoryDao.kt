@@ -10,15 +10,21 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 
 @Dao
 interface FeeCategoryDao {
+    @Query("SELECT * FROM FeeCategory WHERE id = :categoryId")
+    suspend fun loadById(categoryId: Int): FeeCategory
+
     @Query("SELECT * FROM FeeCategory")
     suspend fun loadAll(): List<FeeCategory>
 
+    @Query("SELECT * FROM FeeCategory WHERE name IN (:names)")
+    fun loadByNames(names: List<String>): List<FeeCategory>
+
     @Insert(onConflict =OnConflictStrategy.IGNORE)
-    suspend fun insert(vararg feeCategories: FeeCategory)
+    suspend fun insert(feeCategories: List<FeeCategory>)
 
     @Update
-    suspend fun update(vararg feeCategories: FeeCategory)
+    suspend fun update(feeCategories: List<FeeCategory>)
 
     @Delete
-    suspend fun delete(vararg feeCategories: FeeCategory)
+    suspend fun delete(feeCategories: List<FeeCategory>)
 }
