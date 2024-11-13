@@ -33,13 +33,3 @@ fun <T : Any, U : Any> KmpResult<T>.convertType(converter: (T) -> U): KmpResult<
         }
     }
 }
-
-/**
- * KmpResultがSuccessだった場合にblockを実行する
- */
-fun <T : Any> KmpResult<T>.whenSucceeded(block: (T) -> Unit): KmpResult<T> {
-    if (this is KmpResult.Success) {
-        block(this.value)
-    }
-    return this
-}
