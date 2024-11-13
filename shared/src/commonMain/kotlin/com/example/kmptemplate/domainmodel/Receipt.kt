@@ -13,7 +13,7 @@ data class Receipt
     constructor(
         val id: Int = 0,
         val cost: Int,
-        val category: String,
+        val category: FeeCategory,
         val createdAt: Instant,
     ) {
         init {
