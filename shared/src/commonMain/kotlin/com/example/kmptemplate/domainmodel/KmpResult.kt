@@ -33,3 +33,18 @@ fun <T : Any, U : Any> KmpResult<T>.convertType(converter: (T) -> U): KmpResult<
         }
     }
 }
+
+/**
+ * もし成功していたら次の処理を行う
+ * 失敗していなた何もせず発生していたエラーを返す
+ */
+fun <T : Any, U : Any> KmpResult<T>.chain(process: (T) -> KmpResult<U>): KmpResult<U> {
+    return when (this) {
+        is KmpResult.Success -> {
+            process(this.value)
+        }
+        is KmpResult.Failure -> {
+            KmpResult.Failure(this.error)
+        }
+    }
+}
