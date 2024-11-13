@@ -1,5 +1,6 @@
 package com.example.kmptemplate
 
+import androidx.room.RoomDatabase
 import com.example.kmptemplate.database.AppDatabase
 import com.example.kmptemplate.datasource.FeeCategoryDataSource
 import com.example.kmptemplate.datasource.RoomFeeCategoryDataSource
@@ -26,6 +27,10 @@ val shareDiModule: Module =
         }
         single<FeeCategoryRepository> {
             FeeCategoryRepositoryImpl(get())
+        }
+        single<AppDatabase> {
+            val builder = get<RoomDatabase.Builder<AppDatabase>>()
+            builder.build()
         }
     }
 

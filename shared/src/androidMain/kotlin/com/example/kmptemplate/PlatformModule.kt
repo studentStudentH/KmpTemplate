@@ -10,8 +10,8 @@ import org.koin.dsl.module
 
 fun makePlatformModule(application: Application): Module {
     return module {
-        single<AppDatabase> {
-            getDatabaseBuilder(application).build()
+        single<RoomDatabase.Builder<AppDatabase>> {
+            getDatabaseBuilder(application)
         }
     }
 }

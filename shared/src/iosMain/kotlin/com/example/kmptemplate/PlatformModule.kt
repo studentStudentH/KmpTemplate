@@ -3,6 +3,7 @@ package com.example.kmptemplate
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.kmptemplate.database.AppDatabase
+import com.example.kmptemplate.util.KermitLogger
 import kotlinx.cinterop.ExperimentalForeignApi
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -12,8 +13,8 @@ import platform.Foundation.NSUserDomainMask
 
 internal val platformModule: Module =
     module {
-        single<AppDatabase> {
-            getDatabaseBuilder().build()
+        single<RoomDatabase.Builder<AppDatabase>> {
+            getDatabaseBuilder()
         }
     }
 
@@ -34,5 +35,8 @@ private fun documentDirectory(): String {
             create = false,
             error = null,
         )
+    if (documentDirectory == null) {
+        KermitLogger.e("PlatformModule") { "----- documentDirectory is null -----" }
+    }
     return requireNotNull(documentDirectory?.path)
 }
