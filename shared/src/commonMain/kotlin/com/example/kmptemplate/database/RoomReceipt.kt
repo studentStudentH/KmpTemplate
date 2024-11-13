@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.kmptemplate.domainmodel.FeeCategory
+import com.example.kmptemplate.domainmodel.Receipt
 import kotlinx.datetime.Instant
 
 /**
@@ -24,4 +25,13 @@ internal data class RoomReceipt(
     val cost: Int,
     val categoryId: Int?,
     val createdAt: Instant
-)
+) {
+    fun toDomainModel(feeCategory: FeeCategory?): Receipt {
+        return Receipt(
+            id = id,
+            cost = cost,
+            category = feeCategory,
+            createdAt = createdAt
+        )
+    }
+}
