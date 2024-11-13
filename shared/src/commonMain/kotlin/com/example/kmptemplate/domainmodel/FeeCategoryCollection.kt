@@ -3,7 +3,7 @@ package com.example.kmptemplate.domainmodel
 data class FeeCategoryCollection
     @Throws(IllegalArgumentException::class)
     constructor(
-        val value: List<FeeCategory>,
+        private val value: List<FeeCategory>,
     ) {
         init {
             if (value.isEmpty()) {
@@ -26,5 +26,10 @@ data class FeeCategoryCollection
 
         fun hasSameName(newName: String): Boolean {
             return value.any { it.name == newName }
+        }
+
+        @Throws(IllegalArgumentException::class)
+        fun add(feeCategory: FeeCategory): FeeCategoryCollection {
+            return FeeCategoryCollection(value + feeCategory)
         }
     }

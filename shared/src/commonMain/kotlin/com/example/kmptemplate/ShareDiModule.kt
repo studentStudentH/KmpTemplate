@@ -1,8 +1,17 @@
 package com.example.kmptemplate
 
+import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.example.kmptemplate.database.AppDatabase
+import com.example.kmptemplate.datasource.FeeCategoryDataSource
+import com.example.kmptemplate.datasource.RoomFeeCategoryDataSource
 import com.example.kmptemplate.repository.DevSampleRepositoryImpl
+import com.example.kmptemplate.repository.FeeCategoryRepository
+import com.example.kmptemplate.repository.FeeCategoryRepositoryImpl
 import com.example.kmptemplate.repository.ReleaseSampleRepositoryImpl
 import com.example.kmptemplate.repository.SampleRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -14,6 +23,20 @@ val shareDiModule: Module =
             } else {
                 DevSampleRepositoryImpl()
             }
+        }
+        single<FeeCategoryDataSource> {
+            val dao = get<AppDatabase>().getFeeCategoryDao()
+            RoomFeeCategoryDataSource(dao)
+        }
+        single<FeeCategoryRepository> {
+            FeeCategoryRepositoryImpl(get())
+        }
+        single<AppDatabase> {
+            val builder = get<RoomDatabase.Builder<AppDatabase>>()
+            builder
+                .setDriver(BundledSQLiteDriver())
+                .setQueryCoroutineContext(Dispatchers.IO)
+                .build()
         }
     }
 

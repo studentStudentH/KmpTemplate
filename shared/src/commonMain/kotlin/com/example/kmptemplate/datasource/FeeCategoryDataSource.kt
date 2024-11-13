@@ -1,16 +1,12 @@
-package com.example.kmptemplate.repository
+package com.example.kmptemplate.datasource
 
 import com.example.kmptemplate.domainmodel.FeeCategory
-import com.example.kmptemplate.domainmodel.FeeCategoryCollection
 import com.example.kmptemplate.domainmodel.KmpResult
 
-interface FeeCategoryRepository {
-    suspend fun getAllCategory(): KmpResult<FeeCategoryCollection>
+internal interface FeeCategoryDataSource {
+    suspend fun getAllCategory(): KmpResult<List<FeeCategory>>
 
-    /**
-     * 返り値は追加されたカテゴリ
-     */
-    suspend fun addCategory(name: String): KmpResult<FeeCategory>
+    suspend fun addCategory(feeCategoryInputs: List<FeeCategoryInput>): KmpResult<List<FeeCategory>>
 
     /**
      * あるカテゴリについて、そのカテゴリを使ったReceiptを新規作成したり、
@@ -29,9 +25,5 @@ interface FeeCategoryRepository {
         newName: String,
     ): KmpResult<FeeCategory>
 
-    /**
-     * 既存のカテゴリを削除する。そのカテゴリが登録されていなかった場合はエラー
-     * 返り値は成否のみ
-     */
-    suspend fun deleteCategory(categoryId: Int): KmpResult<Unit>
+    suspend fun delete(feeCategories: List<FeeCategory>): KmpResult<Unit>
 }
