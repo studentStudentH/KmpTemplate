@@ -19,7 +19,7 @@ internal val platformModule: Module =
     }
 
 private fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
-    val dbFilePath = documentDirectory() + "/my_room.db"
+    val dbFilePath = documentDirectory() + "/kmp_template_room.db"
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,
     )
