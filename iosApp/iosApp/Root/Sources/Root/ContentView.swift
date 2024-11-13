@@ -14,8 +14,6 @@ public struct ContentView: View {
 
     private let tag = "ContentView"
 
-    private let sampleRepository = DiContainer.shared.sampleRepository
-
     @State var texts: [String] = ["loading"]
 
     public var body: some View {
@@ -34,16 +32,18 @@ public struct ContentView: View {
     }
 
     public func loadData() async {
-        let repo = DiContainer.shared.sampleRepository
+        let repo: FeeCategoryRepository = DiContainer.shared.feeCategoryRepository
         do {
-            let result = try await repo.getSampleWords()
+            let result = try await repo.getAllCategory()
             print("result; \(result)")
             switch onEnum(of: result) {
             case .failure(let kmpError):
                 texts = [kmpError.error.msg]
             case .success(let successResult):
-                texts = successResult.value.list.map { word in
-                    word.description
+                texts = successResult.value
+                    .getMostRecentlyUsedList()
+                    .map { feeCategory in
+                        feeCategory.name
                 }
             }
         } catch {
