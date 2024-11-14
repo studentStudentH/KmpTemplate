@@ -23,5 +23,5 @@ data class ReceiptCollectionPerCategory
             get() = receipts.sumOf { it.cost }
 
         val categoryName: String
-            get() = receipts.first().category.name
+            get() = receipts.first().category?.name ?: "分類なしß"
     }
