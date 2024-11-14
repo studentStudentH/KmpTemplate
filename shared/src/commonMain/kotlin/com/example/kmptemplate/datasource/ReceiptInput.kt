@@ -21,7 +21,7 @@ internal data class ReceiptInput(
             id = Uuid.random().toHexString(),
             cost = cost,
             categoryId = category.id,
-            createdAt = createdAt
+            createdAt = createdAt,
         )
     }
 }

@@ -8,11 +8,13 @@ import androidx.room.Update
 import com.example.kmptemplate.domainmodel.FeeCategory
 
 internal interface RoomReceiptDao {
-    @Query("""
+    @Query(
+        """
         SELECT * FROM RoomReceipt JOIN FeeCategory
         ON RoomReceipt.categoryId = FeeCategory.id 
         WHERE id = :receiptId
-    """)
+    """,
+    )
     suspend fun loadById(receiptId: Int): Map<RoomReceipt, FeeCategory>
 
     @Query("SELECT * FROM RoomReceipt JOIN FeeCategory ON RoomReceipt.categoryId = FeeCategory.id")

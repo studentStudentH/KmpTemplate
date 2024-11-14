@@ -16,22 +16,22 @@ import kotlinx.datetime.Instant
             entity = FeeCategory::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("categoryId"),
-            onDelete = ForeignKey.SET_NULL
-        )
-    ]
+            onDelete = ForeignKey.SET_NULL,
+        ),
+    ],
 )
 internal data class RoomReceipt(
     @PrimaryKey(autoGenerate = false) val id: String,
     val cost: Int,
     val categoryId: Int?,
-    val createdAt: Instant
+    val createdAt: Instant,
 ) {
     fun toDomainModel(feeCategory: FeeCategory?): Receipt {
         return Receipt(
             id = id,
             cost = cost,
             category = feeCategory,
-            createdAt = createdAt
+            createdAt = createdAt,
         )
     }
 
@@ -41,7 +41,7 @@ internal data class RoomReceipt(
                 id = receipt.id,
                 cost = receipt.cost,
                 categoryId = receipt.category?.id,
-                createdAt = receipt.createdAt
+                createdAt = receipt.createdAt,
             )
         }
     }

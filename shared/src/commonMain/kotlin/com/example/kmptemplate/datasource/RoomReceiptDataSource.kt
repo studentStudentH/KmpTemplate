@@ -11,13 +11,14 @@ import com.example.kmptemplate.domainmodel.convertType
 internal class RoomReceiptDataSource(
     private val receiptDao: RoomReceiptDao,
     private val categoryDataSource: FeeCategoryDataSource,
-): ReceiptDataSource {
+) : ReceiptDataSource {
     override suspend fun getAllReceipts(): KmpResult<List<Receipt>> {
         return try {
             val receiptMaps = receiptDao.loadAll()
-            val receipts = receiptMaps.map { (roomReceipt, feeCategory) ->
-                roomReceipt.toDomainModel(feeCategory)
-            }
+            val receipts =
+                receiptMaps.map { (roomReceipt, feeCategory) ->
+                    roomReceipt.toDomainModel(feeCategory)
+                }
             KmpResult.Success(receipts)
         } catch (e: Exception) {
             KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
@@ -38,7 +39,7 @@ internal class RoomReceiptDataSource(
                     KmpResult.Success(addedReceipt)
                 }
             }
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
         }
     }
@@ -70,6 +71,5 @@ internal class RoomReceiptDataSource(
     private companion object {
         const val TAG = "RoomReceiptDataSource"
         const val UNKNOWN_ERROR_MSG = "不明なエラーです"
-
     }
 }
