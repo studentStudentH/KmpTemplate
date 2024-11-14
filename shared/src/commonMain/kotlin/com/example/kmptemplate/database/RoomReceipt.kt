@@ -21,7 +21,7 @@ import kotlinx.datetime.Instant
     ]
 )
 internal data class RoomReceipt(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = false) val id: String,
     val cost: Int,
     val categoryId: Int?,
     val createdAt: Instant
@@ -33,5 +33,16 @@ internal data class RoomReceipt(
             category = feeCategory,
             createdAt = createdAt
         )
+    }
+
+    companion object {
+        fun fromDomainModel(receipt: Receipt): RoomReceipt {
+            return RoomReceipt(
+                id = receipt.id,
+                cost = receipt.cost,
+                categoryId = receipt.category?.id,
+                createdAt = receipt.createdAt
+            )
+        }
     }
 }
