@@ -6,6 +6,8 @@ import com.example.kmptemplate.domainmodel.ReceiptCollection
 import kotlinx.datetime.Instant
 
 interface ReceiptRepository {
+    suspend fun getAllReceipts(): KmpResult<ReceiptCollection>
+
     suspend fun getReceiptsNewerThan(
         year: Int,
         month: Int,
