@@ -66,7 +66,9 @@ internal class FeeCategoryRepositoryImpl(
     }
 
     private suspend fun initializeCategory(): KmpResult<FeeCategoryCollection> {
-        val inputs = INITIAL_CATEGORIES.map { FeeCategoryInput(it, Clock.System.now()) }
+        val inputs = FeeCategory.INITIAL_CATEGORIES.map {
+            FeeCategoryInput(it, Clock.System.now())
+        }
         val result = dataSource.addCategory(inputs)
         return try {
             result.convertType { FeeCategoryCollection(it) }
@@ -79,6 +81,5 @@ internal class FeeCategoryRepositoryImpl(
 
     private companion object {
         const val TAG = "FeeCategoryRepositoryImpl"
-        val INITIAL_CATEGORIES = listOf("食費", "交通費", "通信費", "その他")
     }
 }
