@@ -23,7 +23,7 @@ import kotlinx.datetime.Instant
 internal data class RoomReceipt(
     @PrimaryKey(autoGenerate = false) val id: String,
     val cost: Int,
-    val categoryId: Int?,
+    val categoryId: String?,
     val createdAt: Instant,
 ) {
     fun toDomainModel(feeCategory: FeeCategory?): Receipt {

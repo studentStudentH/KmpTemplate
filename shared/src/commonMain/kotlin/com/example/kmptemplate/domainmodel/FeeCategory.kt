@@ -12,7 +12,7 @@ import kotlinx.datetime.Instant
  */
 @Entity(indices = [Index(value = ["name"], unique = true)])
 data class FeeCategory(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = false) val id: String,
     val name: String,
     val lastUsedAt: Instant,
 )
