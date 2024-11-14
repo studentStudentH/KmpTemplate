@@ -29,7 +29,7 @@ internal class RoomFeeCategoryDataSource(
             val convertedItems =
                 feeCategoryInputs.map {
                     val newId = Uuid.random().toHexString()
-                    FeeCategory(id = newId,name = it.name, lastUsedAt = it.lastUsedAt)
+                    FeeCategory(id = newId, name = it.name, lastUsedAt = it.lastUsedAt)
                 }
             feeCategoryDao.insert(convertedItems)
             val queryNames = feeCategoryInputs.map { it.name }
