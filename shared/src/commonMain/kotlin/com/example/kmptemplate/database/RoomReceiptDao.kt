@@ -15,7 +15,7 @@ internal interface RoomReceiptDao {
         WHERE id = :receiptId
     """,
     )
-    suspend fun loadById(receiptId: Int): Map<RoomReceipt, FeeCategory>
+    suspend fun loadById(receiptId: String): Map<RoomReceipt, FeeCategory>
 
     @Query("SELECT * FROM RoomReceipt JOIN FeeCategory ON RoomReceipt.categoryId = FeeCategory.id")
     suspend fun loadAll(): Map<RoomReceipt, FeeCategory>
