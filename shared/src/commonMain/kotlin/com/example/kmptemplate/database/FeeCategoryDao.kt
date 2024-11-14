@@ -11,7 +11,7 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 @Dao
 internal interface FeeCategoryDao {
     @Query("SELECT * FROM FeeCategory WHERE id = :categoryId")
-    suspend fun loadById(categoryId: Int): FeeCategory
+    suspend fun loadById(categoryId: String): FeeCategory
 
     @Query("SELECT * FROM FeeCategory")
     suspend fun loadAll(): List<FeeCategory>

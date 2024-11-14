@@ -5,6 +5,8 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpError
 import com.example.kmptemplate.domainmodel.KmpResult
 import kotlinx.datetime.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * ToDo: エラーハンドリングが適当すぎるのでちゃんとする
@@ -21,11 +23,13 @@ internal class RoomFeeCategoryDataSource(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun addCategory(feeCategoryInputs: List<FeeCategoryInput>): KmpResult<List<FeeCategory>> {
         return try {
             val convertedItems =
                 feeCategoryInputs.map {
-                    FeeCategory(name = it.name, lastUsedAt = it.lastUsedAt)
+                    val newId = Uuid.random().toHexString()
+                    FeeCategory(id = newId, name = it.name, lastUsedAt = it.lastUsedAt)
                 }
             feeCategoryDao.insert(convertedItems)
             val queryNames = feeCategoryInputs.map { it.name }
@@ -36,7 +40,7 @@ internal class RoomFeeCategoryDataSource(
         }
     }
 
-    override suspend fun updateLastUsedTime(categoryId: Int): KmpResult<FeeCategory> {
+    override suspend fun updateLastUsedTime(categoryId: String): KmpResult<FeeCategory> {
         return try {
             val data = feeCategoryDao.loadById(categoryId)
             val updatedData = data.copy(lastUsedAt = Clock.System.now())
@@ -48,7 +52,7 @@ internal class RoomFeeCategoryDataSource(
     }
 
     override suspend fun renameCategory(
-        categoryId: Int,
+        categoryId: String,
         newName: String,
     ): KmpResult<FeeCategory> {
         return try {
