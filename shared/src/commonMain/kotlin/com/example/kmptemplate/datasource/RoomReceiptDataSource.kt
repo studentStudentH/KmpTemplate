@@ -2,6 +2,7 @@ package com.example.kmptemplate.datasource
 
 import com.example.kmptemplate.database.RoomReceipt
 import com.example.kmptemplate.database.RoomReceiptDao
+import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpError
 import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.Receipt
@@ -29,25 +30,35 @@ internal class RoomReceiptDataSource(
     }
 
     override suspend fun addItem(receiptInput: ReceiptInput): KmpResult<Receipt> {
-        return try {
+        try {
+            if (receiptInput.category == null) {
+                return addRoomReceipt(receiptInput, null)
+            }
             val categoriesResult = categoryDataSource.getAllCategory()
-            categoriesResult.chain { categories ->
+            return categoriesResult.chain { categories ->
                 if (receiptInput.category.id !in categories.map { it.id }) {
                     KmpResult.Failure(KmpError.IllegalArgumentError("存在しないカテゴリidです"))
                 } else {
                     categoryDataSource.updateLastUsedTime(receiptInput.category.id)
                 }
             }.chain { targetCategory ->
-                val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
-                receiptDao.insert(listOf(roomReceipt))
-                val addedReceipt = roomReceipt.toDomainModel(targetCategory)
-                KmpResult.Success(addedReceipt)
+                addRoomReceipt(receiptInput, targetCategory)
             }
         } catch (e: Exception) {
             val msg = e.message ?: UNKNOWN_ERROR_MSG
             KermitLogger.e(TAG) { msg }
-            KmpResult.Failure(KmpError.ServerError(msg))
+            return KmpResult.Failure(KmpError.ServerError(msg))
         }
+    }
+
+    private suspend fun addRoomReceipt(
+        receiptInput: ReceiptInput,
+        targetCategory: FeeCategory?
+    ): KmpResult<Receipt> {
+        val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
+        receiptDao.insert(listOf(roomReceipt))
+        val addedReceipt = roomReceipt.toDomainModel(targetCategory)
+        return KmpResult.Success(addedReceipt)
     }
 
     override suspend fun updateItem(receipt: Receipt): KmpResult<Receipt> {
