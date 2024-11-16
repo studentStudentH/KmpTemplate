@@ -4,7 +4,7 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 
 internal class SimulatedRoomReceiptDao(
     private val dataHolder: SimulatedDataHolder,
-): RoomReceiptDao {
+) : RoomReceiptDao {
     override suspend fun loadById(receiptId: String): Map<RoomReceipt, FeeCategory> {
         val receipt = dataHolder.receiptList.first { it.id == receiptId }
         val category = dataHolder.feeCategoryList.first { it.id == receipt.categoryId }
@@ -36,13 +36,14 @@ internal class SimulatedRoomReceiptDao(
     }
 
     private fun updateOne(receipt: RoomReceipt) {
-        val newReceipts = dataHolder.receiptList.map {
-            if (it.id == receipt.id) {
-                receipt
-            } else {
-                it
+        val newReceipts =
+            dataHolder.receiptList.map {
+                if (it.id == receipt.id) {
+                    receipt
+                } else {
+                    it
+                }
             }
-        }
         dataHolder.receiptList = newReceipts
     }
 

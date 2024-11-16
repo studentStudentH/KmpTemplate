@@ -3,8 +3,8 @@ package com.example.kmptemplate.database
 import com.example.kmptemplate.domainmodel.FeeCategory
 
 internal class SimulatedFeeCategoryDao(
-    private val dataHolder: SimulatedDataHolder
-): FeeCategoryDao {
+    private val dataHolder: SimulatedDataHolder,
+) : FeeCategoryDao {
     override suspend fun loadById(categoryId: String): FeeCategory {
         return dataHolder.feeCategoryList.first { it.id == categoryId }
     }
@@ -31,13 +31,14 @@ internal class SimulatedFeeCategoryDao(
     }
 
     private fun updateOne(feeCategory: FeeCategory) {
-        val newCategories = dataHolder.feeCategoryList.map {
-            if (it.id == feeCategory.id) {
-                feeCategory
-            } else {
-                it
+        val newCategories =
+            dataHolder.feeCategoryList.map {
+                if (it.id == feeCategory.id) {
+                    feeCategory
+                } else {
+                    it
+                }
             }
-        }
         dataHolder.feeCategoryList = newCategories
     }
 
@@ -48,14 +49,14 @@ internal class SimulatedFeeCategoryDao(
         dataHolder.feeCategoryList = newCategories
         // レシート内のカテゴリの更新
         val deletedCategoryIds = feeCategories.map { it.id }
-        val newReceipts = dataHolder.receiptList.map {
-            if (it.categoryId in deletedCategoryIds) {
-                it.copy(categoryId = null)
+        val newReceipts =
+            dataHolder.receiptList.map {
+                if (it.categoryId in deletedCategoryIds) {
+                    it.copy(categoryId = null)
+                } else {
+                    it
+                }
             }
-            else {
-                it
-            }
-        }
         dataHolder.receiptList = newReceipts
     }
 }

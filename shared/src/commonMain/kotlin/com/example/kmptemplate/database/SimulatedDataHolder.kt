@@ -18,18 +18,20 @@ internal class SimulatedDataHolder(
          */
         @OptIn(ExperimentalUuidApi::class)
         fun makeTestData(): SimulatedDataHolder {
-            val feeCategories = FeeCategory.INITIAL_CATEGORIES.map {
-                val id = Uuid.random().toHexString()
-                FeeCategory(id, it, Clock.System.now())
-            }
-            val roomReceipts = feeCategories.map {
-                val id = Uuid.random().toHexString()
-                val cost = 1000
-                RoomReceipt(id, cost, it.id, Clock.System.now())
-            }
+            val feeCategories =
+                FeeCategory.INITIAL_CATEGORIES.map {
+                    val id = Uuid.random().toHexString()
+                    FeeCategory(id, it, Clock.System.now())
+                }
+            val roomReceipts =
+                feeCategories.map {
+                    val id = Uuid.random().toHexString()
+                    val cost = 1000
+                    RoomReceipt(id, cost, it.id, Clock.System.now())
+                }
             return SimulatedDataHolder(
                 feeCategories,
-                roomReceipts
+                roomReceipts,
             )
         }
     }

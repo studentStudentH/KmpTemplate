@@ -64,25 +64,27 @@ internal class FeeCategoryRepositoryImpl(
 
     override suspend fun deleteCategory(categoryId: String): KmpResult<Unit> {
         val getResult = this.getAllCategory()
-        val feeCategoryResult: KmpResult<FeeCategory> = getResult.chain { feeCategoryCollection ->
-            val feeCategory = feeCategoryCollection.getById(categoryId)
-            if (feeCategory == null) {
-                val msg = "カテゴリが存在しません"
-                KermitLogger.e(TAG) { "deleteCategory() error = $msg" }
-                KmpResult.Failure(error = KmpError.IllegalArgumentError(msg))
-            } else {
-                KmpResult.Success(feeCategory)
+        val feeCategoryResult: KmpResult<FeeCategory> =
+            getResult.chain { feeCategoryCollection ->
+                val feeCategory = feeCategoryCollection.getById(categoryId)
+                if (feeCategory == null) {
+                    val msg = "カテゴリが存在しません"
+                    KermitLogger.e(TAG) { "deleteCategory() error = $msg" }
+                    KmpResult.Failure(error = KmpError.IllegalArgumentError(msg))
+                } else {
+                    KmpResult.Success(feeCategory)
+                }
             }
-        }
         return feeCategoryResult.chain { targetFeeCategory ->
             dataSource.delete(listOf(targetFeeCategory))
         }
     }
 
     private suspend fun initializeCategory(): KmpResult<FeeCategoryCollection> {
-        val inputs = FeeCategory.INITIAL_CATEGORIES.map {
-            FeeCategoryInput(it, Clock.System.now())
-        }
+        val inputs =
+            FeeCategory.INITIAL_CATEGORIES.map {
+                FeeCategoryInput(it, Clock.System.now())
+            }
         val result = dataSource.addCategory(inputs)
         return try {
             result.convertType { FeeCategoryCollection(it) }

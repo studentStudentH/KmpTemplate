@@ -9,11 +9,12 @@ import kotlin.test.assertFails
 class ReceiptTest {
     @Test
     fun test() {
-        val feeCategory = FeeCategory(
-            "categoryId",
-            "category",
-            Clock.System.now(),
-        )
+        val feeCategory =
+            FeeCategory(
+                "categoryId",
+                "category",
+                Clock.System.now(),
+            )
         val receipt =
             Receipt(
                 "categoryId",
