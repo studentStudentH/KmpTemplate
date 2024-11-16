@@ -6,6 +6,7 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.FeeCategoryCollection
 import com.example.kmptemplate.domainmodel.KmpError
 import com.example.kmptemplate.domainmodel.KmpResult
+import com.example.kmptemplate.domainmodel.chain
 import com.example.kmptemplate.domainmodel.convertType
 import com.example.kmptemplate.util.KermitLogger
 import kotlinx.datetime.Clock
@@ -50,19 +51,32 @@ internal class FeeCategoryRepositoryImpl(
         }
     }
 
-    override suspend fun updateLastUsedTime(categoryId: Int): KmpResult<FeeCategory> {
-        TODO("Not yet implemented")
+    override suspend fun updateLastUsedTime(categoryId: String): KmpResult<FeeCategory> {
+        return dataSource.updateLastUsedTime(categoryId)
     }
 
     override suspend fun renameCategory(
-        categoryId: Int,
+        categoryId: String,
         newName: String,
     ): KmpResult<FeeCategory> {
-        TODO("Not yet implemented")
+        return dataSource.renameCategory(categoryId, newName)
     }
 
-    override suspend fun deleteCategory(categoryId: Int): KmpResult<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun deleteCategory(categoryId: String): KmpResult<Unit> {
+        val getResult = this.getAllCategory()
+        val feeCategoryResult: KmpResult<FeeCategory> = getResult.chain { feeCategoryCollection ->
+            val feeCategory = feeCategoryCollection.getById(categoryId)
+            if (feeCategory == null) {
+                val msg = "カテゴリが存在しません"
+                KermitLogger.e(TAG) { "deleteCategory() error = $msg" }
+                KmpResult.Failure(error = KmpError.IllegalArgumentError(msg))
+            } else {
+                KmpResult.Success(feeCategory)
+            }
+        }
+        return feeCategoryResult.chain { targetFeeCategory ->
+            dataSource.delete(listOf(targetFeeCategory))
+        }
     }
 
     private suspend fun initializeCategory(): KmpResult<FeeCategoryCollection> {
