@@ -46,8 +46,8 @@ internal class ReceiptRepositoryImpl(
             result.convertType {
                 val receiptCollection = ReceiptCollection(it)
                 receiptCollection
-                    .filterOlderThan(oldestYearMonth)
-                    .filterNewerThan(newestYearMonth)
+                    .filterOlderThan(newestYearMonth)
+                    .filterNewerThan(oldestYearMonth)
             }
         }
     }

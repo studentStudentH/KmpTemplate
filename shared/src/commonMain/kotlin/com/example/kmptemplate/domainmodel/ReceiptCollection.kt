@@ -81,7 +81,7 @@ data class ReceiptCollection(
 
     fun filterOlderThan(yearMonth: YearMonth): ReceiptCollection {
         val filteredList = receipts.filter {
-            it.createdAt.toSystemLocalDateTime() >= yearMonth.toLocalDateTime()
+            it.createdAt.toSystemLocalDateTime() <= yearMonth.toLocalDateTime()
         }
         return ReceiptCollection(filteredList)
     }
