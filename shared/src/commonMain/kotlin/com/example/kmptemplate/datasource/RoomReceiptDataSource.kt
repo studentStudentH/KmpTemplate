@@ -32,12 +32,13 @@ internal class RoomReceiptDataSource(
                 if (receiptInput.category.id !in categories.map { it.id }) {
                     KmpResult.Failure(KmpError.IllegalArgumentError("存在しないカテゴリidです"))
                 } else {
-                    val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
-                    receiptDao.insert(listOf(roomReceipt))
-                    val targetCategory = categories.first { it.id == receiptInput.category.id }
-                    val addedReceipt = roomReceipt.toDomainModel(targetCategory)
-                    KmpResult.Success(addedReceipt)
+                    categoryDataSource.updateLastUsedTime(receiptInput.category.id)
                 }
+            }.chain { targetCategory ->
+                val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
+                receiptDao.insert(listOf(roomReceipt))
+                val addedReceipt = roomReceipt.toDomainModel(targetCategory)
+                KmpResult.Success(addedReceipt)
             }
         } catch (e: Exception) {
             KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
