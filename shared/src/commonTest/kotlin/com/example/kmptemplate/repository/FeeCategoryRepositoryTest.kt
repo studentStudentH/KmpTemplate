@@ -12,6 +12,9 @@ import kotlin.test.fail
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
+/**
+ * ToDo: 共通化できる処理は関数に分ける
+ */
 class FeeCategoryRepositoryTest {
     @Test
     fun testGetAll() =
