@@ -7,6 +7,7 @@ import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.Receipt
 import com.example.kmptemplate.domainmodel.chain
 import com.example.kmptemplate.domainmodel.convertType
+import com.example.kmptemplate.util.KermitLogger
 
 internal class RoomReceiptDataSource(
     private val receiptDao: RoomReceiptDao,
@@ -21,7 +22,9 @@ internal class RoomReceiptDataSource(
                 }
             KmpResult.Success(receipts)
         } catch (e: Exception) {
-            KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
@@ -41,7 +44,9 @@ internal class RoomReceiptDataSource(
                 KmpResult.Success(addedReceipt)
             }
         } catch (e: Exception) {
-            KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
@@ -52,11 +57,13 @@ internal class RoomReceiptDataSource(
                 return categoryUpdateResult.convertType { receipt }
             }
         }
-        try {
+        return try {
             receiptDao.update(listOf(RoomReceipt.fromDomainModel(receipt)))
-            return KmpResult.Success(receipt)
+            KmpResult.Success(receipt)
         } catch (e: Exception) {
-            return KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
@@ -65,7 +72,9 @@ internal class RoomReceiptDataSource(
             receiptDao.delete(receipts.map { RoomReceipt.fromDomainModel(it) })
             KmpResult.Success(Unit)
         } catch (e: Exception) {
-            KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
