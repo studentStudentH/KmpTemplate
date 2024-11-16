@@ -26,7 +26,7 @@ class ReceiptRepositoryTest {
         timeout = 5.0.toDuration(DurationUnit.SECONDS),
     ) {
         // given
-        val dataHolder = SimulatedDataHolder.makeTestData()
+        val dataHolder = makeDataHolder()
         val repository = makeRepository(dataHolder)
 
         // when
@@ -50,7 +50,7 @@ class ReceiptRepositoryTest {
         timeout = 5.0.toDuration(DurationUnit.SECONDS),
     ) {
         // given
-        val dataHolder = makeDataHolderForExtractMethod()
+        val dataHolder = makeDataHolder()
         val repository = makeRepository(dataHolder)
 
         // when
@@ -78,7 +78,7 @@ class ReceiptRepositoryTest {
         timeout = 5.0.toDuration(DurationUnit.SECONDS),
     ) {
         // given
-        val dataHolder = makeDataHolderForExtractMethod()
+        val dataHolder = makeDataHolder()
         val repository = makeRepository(dataHolder)
 
         // when
@@ -138,7 +138,7 @@ class ReceiptRepositoryTest {
      * SimulatedDataHolderを作成する
      */
     @OptIn(ExperimentalUuidApi::class)
-    private fun makeDataHolderForExtractMethod(): SimulatedDataHolder {
+    private fun makeDataHolder(): SimulatedDataHolder {
         val year = 2024
         val baseMonth = 11
         val feeCategories =
