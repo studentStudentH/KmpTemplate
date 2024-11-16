@@ -18,14 +18,14 @@ interface FeeCategoryRepository {
      * そのカテゴリの最終利用時刻を現在の時刻に設定する
      * 返り値は追加されたカテゴリ
      */
-    suspend fun updateLastUsedTime(categoryId: Int): KmpResult<FeeCategory>
+    suspend fun updateLastUsedTime(categoryId: String): KmpResult<FeeCategory>
 
     /**
      * 既存のカテゴリのカテゴリ名を修正する。oldNameが登録されていなかった場合はエラー
      * 返り値は更新後のカテゴリ
      */
     suspend fun renameCategory(
-        categoryId: Int,
+        categoryId: String,
         newName: String,
     ): KmpResult<FeeCategory>
 
@@ -33,5 +33,5 @@ interface FeeCategoryRepository {
      * 既存のカテゴリを削除する。そのカテゴリが登録されていなかった場合はエラー
      * 返り値は成否のみ
      */
-    suspend fun deleteCategory(categoryId: Int): KmpResult<Unit>
+    suspend fun deleteCategory(categoryId: String): KmpResult<Unit>
 }

@@ -28,6 +28,10 @@ data class FeeCategoryCollection
             return value.any { it.name == newName }
         }
 
+        fun getById(id: String): FeeCategory? {
+            return value.firstOrNull { it.id == id }
+        }
+
         @Throws(IllegalArgumentException::class)
         fun add(feeCategory: FeeCategory): FeeCategoryCollection {
             return FeeCategoryCollection(value + feeCategory)

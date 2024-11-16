@@ -15,4 +15,8 @@ data class FeeCategory(
     @PrimaryKey(autoGenerate = false) val id: String,
     val name: String,
     val lastUsedAt: Instant,
-)
+) {
+    internal companion object {
+        val INITIAL_CATEGORIES = listOf("食費", "交通費", "通信費", "その他")
+    }
+}
