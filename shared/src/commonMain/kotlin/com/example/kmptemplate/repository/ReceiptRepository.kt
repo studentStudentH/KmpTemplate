@@ -25,16 +25,16 @@ interface ReceiptRepository {
      */
     suspend fun add(
         cost: Int,
-        category: String,
+        categoryId: String,
         createdAt: Instant,
     ): KmpResult<Receipt>
 
     suspend fun update(
-        id: Int,
+        receiptId: String,
         cost: Int,
-        category: String,
+        categoryId: String,
         createdAt: Instant,
     ): KmpResult<Receipt>
 
-    suspend fun delete(id: Int): KmpResult<Receipt>
+    suspend fun delete(receiptId: String): KmpResult<Receipt>
 }
