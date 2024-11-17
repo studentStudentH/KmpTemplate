@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 
 internal data class ReceiptInput(
     val cost: Int,
-    val category: FeeCategory,
+    val category: FeeCategory?,
     val createdAt: Instant,
 ) {
     init {
@@ -20,7 +20,7 @@ internal data class ReceiptInput(
         return RoomReceipt(
             id = Uuid.random().toHexString(),
             cost = cost,
-            categoryId = category.id,
+            categoryId = category?.id,
             createdAt = createdAt,
         )
     }

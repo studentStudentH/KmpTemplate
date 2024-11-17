@@ -2,11 +2,13 @@ package com.example.kmptemplate.datasource
 
 import com.example.kmptemplate.database.RoomReceipt
 import com.example.kmptemplate.database.RoomReceiptDao
+import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpError
 import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.Receipt
 import com.example.kmptemplate.domainmodel.chain
 import com.example.kmptemplate.domainmodel.convertType
+import com.example.kmptemplate.util.KermitLogger
 
 internal class RoomReceiptDataSource(
     private val receiptDao: RoomReceiptDao,
@@ -21,41 +23,65 @@ internal class RoomReceiptDataSource(
                 }
             KmpResult.Success(receipts)
         } catch (e: Exception) {
-            KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
     override suspend fun addItem(receiptInput: ReceiptInput): KmpResult<Receipt> {
-        return try {
+        try {
+            if (receiptInput.category == null) {
+                return addRoomReceipt(receiptInput, null)
+            }
             val categoriesResult = categoryDataSource.getAllCategory()
-            categoriesResult.chain { categories ->
+            return categoriesResult.chain { categories ->
                 if (receiptInput.category.id !in categories.map { it.id }) {
                     KmpResult.Failure(KmpError.IllegalArgumentError("存在しないカテゴリidです"))
                 } else {
-                    val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
-                    receiptDao.insert(listOf(roomReceipt))
-                    val targetCategory = categories.first { it.id == receiptInput.category.id }
-                    val addedReceipt = roomReceipt.toDomainModel(targetCategory)
-                    KmpResult.Success(addedReceipt)
+                    categoryDataSource.updateLastUsedTime(receiptInput.category.id)
                 }
+            }.chain { targetCategory ->
+                addRoomReceipt(receiptInput, targetCategory)
             }
         } catch (e: Exception) {
-            KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            return KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
+    private suspend fun addRoomReceipt(
+        receiptInput: ReceiptInput,
+        targetCategory: FeeCategory?,
+    ): KmpResult<Receipt> {
+        val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
+        receiptDao.insert(listOf(roomReceipt))
+        val addedReceipt = roomReceipt.toDomainModel(targetCategory)
+        return KmpResult.Success(addedReceipt)
+    }
+
     override suspend fun updateItem(receipt: Receipt): KmpResult<Receipt> {
-        receipt.category?.let {
-            val categoryUpdateResult = categoryDataSource.updateLastUsedTime(it.id)
-            if (categoryUpdateResult is KmpResult.Failure) {
-                return categoryUpdateResult.convertType { receipt }
+        val updatedCategory =
+            receipt.category?.let {
+                val categoryUpdateResult = categoryDataSource.updateLastUsedTime(it.id)
+                KermitLogger.d(TAG) { "categoryUpdateResult = $categoryUpdateResult" }
+                when (categoryUpdateResult) {
+                    is KmpResult.Failure -> {
+                        return@updateItem categoryUpdateResult.convertType { receipt }
+                    }
+                    is KmpResult.Success -> {
+                        return@let categoryUpdateResult.value
+                    }
+                }
             }
-        }
-        try {
+        return try {
             receiptDao.update(listOf(RoomReceipt.fromDomainModel(receipt)))
-            return KmpResult.Success(receipt)
+            KmpResult.Success(receipt.copy(category = updatedCategory))
         } catch (e: Exception) {
-            return KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 
@@ -64,7 +90,9 @@ internal class RoomReceiptDataSource(
             receiptDao.delete(receipts.map { RoomReceipt.fromDomainModel(it) })
             KmpResult.Success(Unit)
         } catch (e: Exception) {
-            KmpResult.Failure(KmpError.ServerError(e.message ?: UNKNOWN_ERROR_MSG))
+            val msg = e.message ?: UNKNOWN_ERROR_MSG
+            KermitLogger.e(TAG) { msg }
+            KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
 

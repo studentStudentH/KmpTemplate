@@ -1,5 +1,6 @@
 package com.example.kmptemplate.repository
 
+import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.Receipt
 import com.example.kmptemplate.domainmodel.ReceiptCollection
@@ -25,16 +26,16 @@ interface ReceiptRepository {
      */
     suspend fun add(
         cost: Int,
-        category: String,
+        category: FeeCategory?,
         createdAt: Instant,
     ): KmpResult<Receipt>
 
     suspend fun update(
-        id: Int,
+        receiptId: String,
         cost: Int,
-        category: String,
+        category: FeeCategory?,
         createdAt: Instant,
     ): KmpResult<Receipt>
 
-    suspend fun delete(id: Int): KmpResult<Receipt>
+    suspend fun delete(receipt: Receipt): KmpResult<Receipt>
 }
