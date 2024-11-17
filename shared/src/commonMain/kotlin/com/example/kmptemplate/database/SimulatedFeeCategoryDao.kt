@@ -1,10 +1,15 @@
 package com.example.kmptemplate.database
 
 import com.example.kmptemplate.domainmodel.FeeCategory
+import com.example.kmptemplate.util.KermitLogger
 
 internal class SimulatedFeeCategoryDao(
     private val dataHolder: SimulatedDataHolder,
 ) : FeeCategoryDao {
+    init {
+        KermitLogger.d(TAG) { "initialized" }
+    }
+
     override suspend fun loadById(categoryId: String): FeeCategory {
         return dataHolder.feeCategoryList.first { it.id == categoryId }
     }
@@ -58,5 +63,9 @@ internal class SimulatedFeeCategoryDao(
                 }
             }
         dataHolder.receiptList = newReceipts
+    }
+
+    private companion object {
+        const val TAG = "SimulatedFeeCategoryDao"
     }
 }
