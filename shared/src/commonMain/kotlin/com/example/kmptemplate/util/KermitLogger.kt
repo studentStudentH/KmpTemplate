@@ -2,6 +2,10 @@ package com.example.kmptemplate.util
 
 import co.touchlab.kermit.Logger
 
+/**
+ * Loggerだといろんなパッケージのものがあって混乱するので
+ * 別名をつけるために用意している
+ */
 object KermitLogger {
     fun d(
         tag: String,
