@@ -62,15 +62,21 @@ internal class RoomReceiptDataSource(
     }
 
     override suspend fun updateItem(receipt: Receipt): KmpResult<Receipt> {
-        receipt.category?.let {
+        val updatedCategory = receipt.category?.let {
             val categoryUpdateResult = categoryDataSource.updateLastUsedTime(it.id)
-            if (categoryUpdateResult is KmpResult.Failure) {
-                return categoryUpdateResult.convertType { receipt }
+            KermitLogger.d(TAG) { "categoryUpdateResult = $categoryUpdateResult" }
+            when (categoryUpdateResult) {
+                is KmpResult.Failure -> {
+                    return@updateItem categoryUpdateResult.convertType { receipt }
+                }
+                is KmpResult.Success -> {
+                    return@let categoryUpdateResult.value
+                }
             }
         }
         return try {
             receiptDao.update(listOf(RoomReceipt.fromDomainModel(receipt)))
-            KmpResult.Success(receipt)
+            KmpResult.Success(receipt.copy(category = updatedCategory))
         } catch (e: Exception) {
             val msg = e.message ?: UNKNOWN_ERROR_MSG
             KermitLogger.e(TAG) { msg }
