@@ -1,5 +1,7 @@
 package com.example.kmptemplate.domainmodel
 
+import com.example.kmptemplate.util.toSystemLocalDateTime
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 
 data class YearMonth
@@ -15,5 +17,12 @@ data class YearMonth
 
         fun toLocalDateTime(): LocalDateTime {
             return LocalDateTime(year, month, 1, 0, 0, 0)
+        }
+
+        companion object {
+            fun makeCurrentYearMonth(): YearMonth {
+                val localDateTime = Clock.System.now().toSystemLocalDateTime()
+                return YearMonth(localDateTime.year, localDateTime.monthNumber)
+            }
         }
     }
