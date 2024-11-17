@@ -13,8 +13,8 @@ import com.example.kmptemplate.util.KermitLogger
 import kotlinx.datetime.Instant
 
 internal class ReceiptRepositoryImpl(
-    private val receiptDataSource: ReceiptDataSource
-): ReceiptRepository {
+    private val receiptDataSource: ReceiptDataSource,
+) : ReceiptRepository {
     override suspend fun getAllReceipts(): KmpResult<ReceiptCollection> {
         return tryApiRequest("getAllReceipts") {
             val result = receiptDataSource.getAllReceipts()
@@ -22,7 +22,10 @@ internal class ReceiptRepositoryImpl(
         }
     }
 
-    override suspend fun getReceiptsNewerThan(year: Int, month: Int): KmpResult<ReceiptCollection> {
+    override suspend fun getReceiptsNewerThan(
+        year: Int,
+        month: Int,
+    ): KmpResult<ReceiptCollection> {
         return tryApiRequest("getReceiptsNewerThan") {
             val result = receiptDataSource.getAllReceipts()
             val yearMonth = YearMonth(year, month)
@@ -37,7 +40,7 @@ internal class ReceiptRepositoryImpl(
         oldestYear: Int,
         oldestMonth: Int,
         newestYear: Int,
-        newestMonth: Int
+        newestMonth: Int,
     ): KmpResult<ReceiptCollection> {
         return tryApiRequest("getReceiptsBetween") {
             val result = receiptDataSource.getAllReceipts()
@@ -55,7 +58,7 @@ internal class ReceiptRepositoryImpl(
     override suspend fun add(
         cost: Int,
         category: FeeCategory?,
-        createdAt: Instant
+        createdAt: Instant,
     ): KmpResult<Receipt> {
         return tryApiRequest("add") {
             val receiptInput = ReceiptInput(cost, category, createdAt)
@@ -67,7 +70,7 @@ internal class ReceiptRepositoryImpl(
         receiptId: String,
         cost: Int,
         category: FeeCategory?,
-        createdAt: Instant
+        createdAt: Instant,
     ): KmpResult<Receipt> {
         return tryApiRequest("update") {
             receiptDataSource.updateItem(Receipt(receiptId, cost, category, createdAt))
@@ -77,16 +80,16 @@ internal class ReceiptRepositoryImpl(
     override suspend fun delete(receipt: Receipt): KmpResult<Receipt> {
         return tryApiRequest("delete") {
             receiptDataSource.deleteReceipts(
-                listOf(receipt)
+                listOf(receipt),
             ).convertType {
                 receipt
             }
         }
     }
 
-    private suspend fun <T: Any> tryApiRequest(
+    private suspend fun <T : Any> tryApiRequest(
         processName: String,
-        process: suspend () -> KmpResult<T>
+        process: suspend () -> KmpResult<T>,
     ): KmpResult<T> {
         return try {
             process()

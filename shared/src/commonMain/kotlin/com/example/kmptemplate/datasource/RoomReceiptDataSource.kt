@@ -53,7 +53,7 @@ internal class RoomReceiptDataSource(
 
     private suspend fun addRoomReceipt(
         receiptInput: ReceiptInput,
-        targetCategory: FeeCategory?
+        targetCategory: FeeCategory?,
     ): KmpResult<Receipt> {
         val roomReceipt = receiptInput.toRoomReceiptWithRandomId()
         receiptDao.insert(listOf(roomReceipt))
@@ -62,18 +62,19 @@ internal class RoomReceiptDataSource(
     }
 
     override suspend fun updateItem(receipt: Receipt): KmpResult<Receipt> {
-        val updatedCategory = receipt.category?.let {
-            val categoryUpdateResult = categoryDataSource.updateLastUsedTime(it.id)
-            KermitLogger.d(TAG) { "categoryUpdateResult = $categoryUpdateResult" }
-            when (categoryUpdateResult) {
-                is KmpResult.Failure -> {
-                    return@updateItem categoryUpdateResult.convertType { receipt }
-                }
-                is KmpResult.Success -> {
-                    return@let categoryUpdateResult.value
+        val updatedCategory =
+            receipt.category?.let {
+                val categoryUpdateResult = categoryDataSource.updateLastUsedTime(it.id)
+                KermitLogger.d(TAG) { "categoryUpdateResult = $categoryUpdateResult" }
+                when (categoryUpdateResult) {
+                    is KmpResult.Failure -> {
+                        return@updateItem categoryUpdateResult.convertType { receipt }
+                    }
+                    is KmpResult.Success -> {
+                        return@let categoryUpdateResult.value
+                    }
                 }
             }
-        }
         return try {
             receiptDao.update(listOf(RoomReceipt.fromDomainModel(receipt)))
             KmpResult.Success(receipt.copy(category = updatedCategory))

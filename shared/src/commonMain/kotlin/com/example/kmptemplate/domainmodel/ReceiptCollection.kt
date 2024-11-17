@@ -73,16 +73,18 @@ data class ReceiptCollection(
     }
 
     fun extractNewerThan(yearMonth: YearMonth): ReceiptCollection {
-        val filteredList = receipts.filter {
-            it.createdAt.toSystemLocalDateTime() >= yearMonth.toLocalDateTime()
-        }
+        val filteredList =
+            receipts.filter {
+                it.createdAt.toSystemLocalDateTime() >= yearMonth.toLocalDateTime()
+            }
         return ReceiptCollection(filteredList)
     }
 
     fun extractOlderThan(yearMonth: YearMonth): ReceiptCollection {
-        val filteredList = receipts.filter {
-            it.createdAt.toSystemLocalDateTime() <= yearMonth.toLocalDateTime()
-        }
+        val filteredList =
+            receipts.filter {
+                it.createdAt.toSystemLocalDateTime() <= yearMonth.toLocalDateTime()
+            }
         return ReceiptCollection(filteredList)
     }
 }
