@@ -10,10 +10,13 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.YearMonth
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -116,21 +119,89 @@ class ReceiptRepositoryTest {
     fun testAdd() = runTest(
         timeout = 5.0.toDuration(DurationUnit.SECONDS),
     ) {
-        // ToDo
+        // given
+        val dataHolder = makeDataHolder()
+        val repository = makeRepository(dataHolder)
+        val targetCategory = dataHolder.feeCategoryList.first()
+        val targetCategoryLastUsedAtTime = targetCategory.lastUsedAt
+
+        // when
+        val result = repository.add(
+            cost = 1000,
+            category = targetCategory,
+            createdAt = Clock.System.now(),
+        )
+
+        // then
+        checkResult(result, "add()が失敗しています。") { addedReceipt ->
+            assertEquals(
+                "addしたのでreceiptのアイテム数は１つ増えるはずです",
+                expected = 5,
+                actual = dataHolder.receiptList.size
+            )
+            val updatedCategory = addedReceipt.category!!
+            assertTrue("追加されたreceiptのfeeCategoryの最終利用時刻が更新されていません") {
+                updatedCategory.lastUsedAt > targetCategoryLastUsedAtTime
+            }
+        }
     }
 
     @Test
     fun testUpdate() = runTest(
         timeout = 5.0.toDuration(DurationUnit.SECONDS),
     ) {
-        // ToDo
+        // given
+        val dataHolder = makeDataHolder()
+        val repository = makeRepository(dataHolder)
+        val targetReceiptId = dataHolder.receiptList.first().id
+        val targetCategory = dataHolder.feeCategoryList.first().copy()
+        val targetCategoryLastUsedAtTime = targetCategory.lastUsedAt
+
+        // when
+        val result = repository.update(
+            receiptId = targetReceiptId,
+            cost = 9999,
+            category = targetCategory,
+            createdAt = Clock.System.now(),
+        )
+
+        // then
+        checkResult(result, "update()が失敗しています。") { updatedReceipt ->
+            val targetReceiptFromDataHolder = dataHolder.receiptList.first { it.id == targetReceiptId }
+            assertTrue("costが期待通り更新されていないようです") {
+                targetReceiptFromDataHolder.cost == 9999
+            }
+            val updatedCategory = updatedReceipt.category!!
+            assertTrue("更新されたreceiptのfeeCategoryの最終利用時刻が更新されていません") {
+                updatedCategory.lastUsedAt > targetCategoryLastUsedAtTime
+            }
+        }
     }
 
     @Test
     fun testDelete() = runTest(
         timeout = 5.0.toDuration(DurationUnit.SECONDS),
     ) {
-        // ToDo
+        // given
+        val dataHolder = makeDataHolder()
+        val repository = makeRepository(dataHolder)
+        val targetRoomReceipt = dataHolder.receiptList.first()
+        val targetCategory = dataHolder.feeCategoryList.find { it.id == targetRoomReceipt.categoryId }
+        val targetReceipt = targetRoomReceipt.toDomainModel(targetCategory)
+
+        // when
+        val result = repository.delete(targetReceipt)
+
+        // then
+        checkResult(result, "delete()が失敗しています。") {
+            assertEquals("削除したのでデータ件数が1件減っているはずです",
+                expected = 3,
+                actual = dataHolder.receiptList.size
+            )
+           assertFalse("削除したアイテムがdataHolderから消えていません") {
+                dataHolder.receiptList.any { it.id == targetReceipt.id }
+           }
+        }
     }
 
     /**
