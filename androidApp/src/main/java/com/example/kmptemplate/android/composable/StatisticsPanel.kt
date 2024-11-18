@@ -1,5 +1,6 @@
 package com.example.kmptemplate.android.composable
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -54,13 +55,13 @@ private fun CategorySummaryItem(
             horizontal = 16.dp,
             vertical = 4.dp
         ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = categorySummary.categoryName,
             style = MaterialTheme.typography.titleMedium
         )
-        Spacer(Modifier.weight(1f))
         CostLabel(
             cost = categorySummary.totalCost,
             costLabelStyle = MaterialTheme.typography.titleMedium,
