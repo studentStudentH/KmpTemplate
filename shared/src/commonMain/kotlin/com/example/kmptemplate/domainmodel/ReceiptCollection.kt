@@ -1,6 +1,7 @@
 package com.example.kmptemplate.domainmodel
 
 import com.example.kmptemplate.util.toSystemLocalDateTime
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 data class ReceiptCollection(
@@ -86,5 +87,15 @@ data class ReceiptCollection(
                 it.createdAt.toSystemLocalDateTime() <= yearMonth.toLocalDateTime()
             }
         return ReceiptCollection(filteredList)
+    }
+
+    companion object {
+        fun makeInstanceForPreview(): ReceiptCollection {
+            val receipt01 = Receipt.makeInstanceForPreview(1000, "食費")
+            val receipt02 = Receipt.makeInstanceForPreview(2500, "食費")
+            val receipt03 = Receipt.makeInstanceForPreview(3000, "光熱費")
+            val receipt04 = Receipt.makeInstanceForPreview(8020, "その他")
+            return ReceiptCollection(listOf(receipt01, receipt02, receipt03, receipt04))
+        }
     }
 }
