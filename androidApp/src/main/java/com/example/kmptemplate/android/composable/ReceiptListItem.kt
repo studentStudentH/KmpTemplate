@@ -55,7 +55,8 @@ fun ReceiptListItem(
         ) {
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "${receipt.cost}円、${dateLabelText}の詳細へ"
+                contentDescription = "${receipt.cost}円、${dateLabelText}の詳細へ",
+                tint = MaterialTheme.colorScheme.outlineVariant
             )
         }
     }
