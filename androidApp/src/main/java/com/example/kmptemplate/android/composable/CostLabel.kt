@@ -33,7 +33,7 @@ fun CostLabel(
 
 @PreviewLightDark
 @Composable
-fun CostLabelPreview() {
+private fun CostLabelPreview() {
     MyApplicationTheme {
         Surface {
             CostLabel(
