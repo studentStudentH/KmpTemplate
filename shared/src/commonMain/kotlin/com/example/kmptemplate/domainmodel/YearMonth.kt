@@ -19,6 +19,18 @@ data class YearMonth
             return LocalDateTime(year, month, 1, 0, 0, 0)
         }
 
+        fun makePrevMonth(): YearMonth {
+            val prevYear = if (month == 1) year - 1 else year
+            val prevMonth = if (month == 1) 12 else month - 1
+            return YearMonth(prevYear, prevMonth)
+        }
+
+        fun makeNextMonth(): YearMonth {
+            val nextYear = if (month == 12) year + 1 else year
+            val nextMonth = if (month == 12) 1 else month + 1
+            return YearMonth(nextYear, nextMonth)
+        }
+
         companion object {
             fun makeCurrentYearMonth(): YearMonth {
                 val localDateTime = Clock.System.now().toSystemLocalDateTime()
