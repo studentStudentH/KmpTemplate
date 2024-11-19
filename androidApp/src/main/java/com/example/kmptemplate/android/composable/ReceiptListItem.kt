@@ -1,5 +1,6 @@
 package com.example.kmptemplate.android.composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,10 @@ fun ReceiptListItem(
 ) {
     val dateLabelText = receipt.createdAt.toSystemLocalDateTime().dateFormat()
     Row(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -52,15 +56,11 @@ fun ReceiptListItem(
                 style = MaterialTheme.typography.labelSmall
             )
         }
-        IconButton(
-            onClick = onClick
-        ) {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = "${receipt.cost}円、${dateLabelText}の詳細へ",
-                tint = MaterialTheme.colorScheme.outlineVariant
-            )
-        }
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = "${receipt.cost}円、${dateLabelText}の詳細へ",
+            tint = MaterialTheme.colorScheme.outlineVariant
+        )
     }
 }
 

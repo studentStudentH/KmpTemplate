@@ -53,11 +53,11 @@ private fun YearMonthList(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
                     .clickable {
                         onSelectYearMonth(it)
                         onDismiss() // アイテムを選択したら画面を閉じる
                     }
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
             ) {
                 Text(
                     text = it.toLabelString(),
