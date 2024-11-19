@@ -3,18 +3,37 @@ package com.example.kmptemplate.domainmodel
 import com.example.kmptemplate.util.toSystemLocalDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 
 data class ReceiptCollection(
     private val receipts: List<Receipt>,
 ) {
     val totalCost: Int
-        get() = receipts.sumOf { it.cost }
+        get() {
+            if (receipts.isEmpty()) {
+                return 0
+            }
+            return receipts.sumOf { it.cost }
+        }
 
     val firstInstant: Instant
-        get() = receipts.minOf { it.createdAt }
+        get() {
+            if (receipts.isEmpty()) {
+                return YearMonth(2024, 1)
+                    .toLocalDateTime()
+                    .toInstant(TimeZone.currentSystemDefault())
+            }
+            return receipts.minOf { it.createdAt }
+        }
 
     val lastInstant: Instant
-        get() = receipts.maxOf { it.createdAt }
+        get() {
+            if (receipts.isEmpty()) {
+                return Clock.System.now()
+            }
+            return receipts.maxOf { it.createdAt }
+        }
 
     /**
      * 同じカテゴリのレシートをまとめたコレクションを返す
