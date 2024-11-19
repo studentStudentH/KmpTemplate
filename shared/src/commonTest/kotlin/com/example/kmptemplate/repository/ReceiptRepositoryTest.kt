@@ -39,7 +39,7 @@ class ReceiptRepositoryTest {
 
             // then
             checkResult(result, "getAllReceipts()が失敗しています。") { receiptCollection ->
-                val receipts = receiptCollection.sortByInstantDecending()
+                val receipts = receiptCollection.sortByInstantDescending()
                 val receiptIds = receipts.map { it.id }.sorted()
                 val expectedIds = dataHolder.receiptList.map { it.id }.sorted()
                 assertEquals(
@@ -64,7 +64,7 @@ class ReceiptRepositoryTest {
 
             // then
             checkResult(result, "getReceiptsNewerThan()が失敗しています。") { receiptCollection ->
-                val receipts = receiptCollection.sortByInstantDecending()
+                val receipts = receiptCollection.sortByInstantDescending()
                 assertEquals(
                     "Receiptの件数が期待と違います",
                     expected = 2,
@@ -99,7 +99,7 @@ class ReceiptRepositoryTest {
 
             // then
             checkResult(result, "getReceiptsNewerThan()が失敗しています。") { receiptCollection ->
-                val receipts = receiptCollection.sortByInstantDecending()
+                val receipts = receiptCollection.sortByInstantDescending()
                 assertEquals(
                     "Receiptの件数が期待と違います",
                     expected = 2,

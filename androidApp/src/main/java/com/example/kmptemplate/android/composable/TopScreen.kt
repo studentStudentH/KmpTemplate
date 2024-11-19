@@ -147,7 +147,7 @@ private fun TopScreenContent(
     // ToDo: ユーザデータの一番早い時刻を代入するように修正すべき
     val baseYearMonth = YearMonth(year = 2024, month = 1)
     val categorySummaryList = receiptCollection.splitByCategory().map { it.makeCategorySummary() }
-    val receiptList = receiptCollection.sortByInstantDecending()
+    val receiptList = receiptCollection.sortByInstantDescending()
     Column(
         modifier = modifier.fillMaxWidth()
     ) {

@@ -48,7 +48,7 @@ data class ReceiptCollection(
     /**
      * 時刻順にソートしてアイテムのリストを返す
      */
-    fun sortByInstantDecending(): List<Receipt> {
+    fun sortByInstantDescending(): List<Receipt> {
         return receipts.sortedByDescending { it.createdAt }
     }
 
