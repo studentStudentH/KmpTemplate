@@ -3,16 +3,14 @@ package com.example.kmptemplate.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.kmptemplate.android.composable.TopScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -20,32 +18,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val viewModel by viewModel<MainViewModel>()
         setContent {
-            val sampleData by viewModel.sampleData.collectAsState()
+            val initialLoadingState by viewModel.initialLoadingState.collectAsState()
+            val headerState by viewModel.headerState.collectAsState()
+            val receiptCollection by viewModel.receiptCollection.collectAsState()
+            val startYearMonth by viewModel.startYearMonth.collectAsState()
+            val endYearMonth by viewModel.endYearMonth.collectAsState()
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    Column {
-                        sampleData.forEach {
-                            Text(it)
-                        }
-                    }
+                    TopScreen(
+                        receiptCollection = receiptCollection,
+                        headerState = headerState,
+                        loadingState = initialLoadingState,
+                        startYearMonth = startYearMonth,
+                        endYearMonth = endYearMonth,
+                        interactions = viewModel,
+                    )
+                    Text("hello")
                 }
             }
         }
-    }
-}
-
-@Composable
-fun GreetingView(text: String) {
-    Text(text = text)
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    MyApplicationTheme {
-        GreetingView("Hello, Android!")
     }
 }

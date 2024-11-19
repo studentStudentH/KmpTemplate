@@ -10,13 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,23 +22,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.kmptemplate.android.MyApplicationTheme
+import com.example.kmptemplate.android.TopScreenInteractions
 import com.example.kmptemplate.android.uiState.HeaderState
 import com.example.kmptemplate.android.uiState.LoadingState
 import com.example.kmptemplate.android.uiState.makeCategorySummary
 import com.example.kmptemplate.domainmodel.Receipt
 import com.example.kmptemplate.domainmodel.ReceiptCollection
+import com.example.kmptemplate.domainmodel.YearMonth
 
 @Composable
 fun TopScreen(
-    receiptCollection: ReceiptCollection,
+    receiptCollection: ReceiptCollection?,
     headerState: HeaderState,
     loadingState: LoadingState,
-    onReceiptClick: (Receipt) -> Unit,
-    onFloatingActionButtonClick: () -> Unit,
+    startYearMonth: YearMonth,
+    endYearMonth: YearMonth?,
+    interactions: TopScreenInteractions,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        floatingActionButton =  { MyFloatingActionButton { onFloatingActionButtonClick() } }
+        floatingActionButton =  { MyFloatingActionButton { } }
     ) {
         // 悪いマナーだが、ヘッダーの有無でアイテムの位置が変わると煩わしいので
         // Boxをつかって重なりを許容する形で配置している
@@ -55,7 +56,17 @@ fun TopScreen(
                     MessagePanel(text = loadingState.msg)
                 }
                 LoadingState.Completed -> {
-                    TopScreenContent(receiptCollection, modifier.padding(it), onReceiptClick)
+                    if (receiptCollection == null) {
+                        MessagePanel(text = "データがありません")
+                        return@Box
+                    }
+                    TopScreenContent(
+                        receiptCollection,
+                        startYearMonth,
+                        endYearMonth,
+                        interactions,
+                        modifier.padding(it)
+                    )
                 }
             }
         }
@@ -128,9 +139,13 @@ private fun MessagePanel(
 @Composable
 private fun TopScreenContent(
     receiptCollection: ReceiptCollection,
+    startYearMonth: YearMonth,
+    endYearMonth: YearMonth?,
+    interactions: TopScreenInteractions,
     modifier: Modifier = Modifier,
-    onReceiptClick: (Receipt) -> Unit
 ) {
+    // ToDo: ユーザデータの一番早い時刻を代入するように修正すべき
+    val baseYearMonth = YearMonth(year = 2024, month = 1)
     val categorySummaryList = receiptCollection.splitByCategory().map { it.makeCategorySummary() }
     val receiptList = receiptCollection.sortByInstantDecending()
     Column(
@@ -138,11 +153,18 @@ private fun TopScreenContent(
     ) {
         Spacer(Modifier.height(24.dp)) // ヘッダーと重ならないようにしている
         StatisticsPanel(categorySummaryList)
+        EditSpanPanel(
+            baseYearMonth = baseYearMonth,
+            startYearMonth = startYearMonth,
+            endYearMonth = endYearMonth,
+            onSelectStartYearMonth = { interactions.onStartYearMonthChanged(it) },
+            onSelectEndYearMonth = { interactions.onEndYearMonthChanged(it) }
+        )
         HorizontalDivider()
         receiptList.forEach { receipt ->
             ReceiptListItem(
                 receipt = receipt,
-                onClick = { onReceiptClick(receipt) }
+                onClick = { interactions.onReceiptSelected(receipt) }
             )
             HorizontalDivider()
         }
@@ -155,10 +177,11 @@ private fun TopScreenPreviewNormal() {
     MyApplicationTheme {
         TopScreen(
             receiptCollection = ReceiptCollection.makeInstanceForPreview(),
-            headerState = HeaderState.Normal("requesting..."),
+            headerState = HeaderState.Error("何かがおかしいです"),
             loadingState = LoadingState.Completed,
-            onReceiptClick = {},
-            onFloatingActionButtonClick = {}
+            startYearMonth = YearMonth(2024, 1),
+            endYearMonth = null,
+            interactions = TopScreenInteractionsStub(),
         )
     }
 }
@@ -171,8 +194,22 @@ private fun TopScreenPreviewLoading() {
             receiptCollection = ReceiptCollection.makeInstanceForPreview(),
             headerState = HeaderState.Normal("requesting..."),
             loadingState = LoadingState.Loading,
-            onReceiptClick = {},
-            onFloatingActionButtonClick = {}
+            startYearMonth = YearMonth(2024, 1),
+            endYearMonth = null,
+            interactions = TopScreenInteractionsStub(),
         )
     }
+}
+
+/**
+ * Preview用
+ */
+private class TopScreenInteractionsStub: TopScreenInteractions {
+    override fun onReceiptSelected(receipt: Receipt) {}
+
+    override fun onAddReceipt(cost: Int) {}
+
+    override fun onStartYearMonthChanged(newStartYearMonth: YearMonth) {}
+
+    override fun onEndYearMonthChanged(newEndYearMonth: YearMonth) {}
 }
