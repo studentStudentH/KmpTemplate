@@ -1,14 +1,20 @@
 package com.example.kmptemplate.android.composable
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
 import com.example.kmptemplate.android.MyApplicationTheme
 import com.example.kmptemplate.domainmodel.YearMonth
 
@@ -44,13 +50,19 @@ private fun YearMonthList(
     ) {
         HorizontalDivider()
         items.forEach {
-            TextButton(
-                onClick = {
-                    onSelectYearMonth(it)
-                    onDismiss() // アイテムを選択したら画面を閉じる
-                }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .clickable {
+                        onSelectYearMonth(it)
+                        onDismiss() // アイテムを選択したら画面を閉じる
+                    }
             ) {
-                Text(it.toLabelString())
+                Text(
+                    text = it.toLabelString(),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
             HorizontalDivider()
         }
