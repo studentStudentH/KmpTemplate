@@ -42,6 +42,14 @@ internal class ReceiptRepositoryImpl(
         newestYear: Int,
         newestMonth: Int,
     ): KmpResult<ReceiptCollection> {
+        KermitLogger.d(TAG) {
+            """
+                oldestYear = $oldestYear,
+                oldestMonth = $oldestMonth,
+                newestYear = $newestYear,
+                newestMonth = $newestMonth,
+            """.trimIndent()
+        }
         return tryApiRequest("getReceiptsBetween") {
             val result = receiptDataSource.getAllReceipts()
             val oldestYearMonth = YearMonth(oldestYear, oldestMonth)

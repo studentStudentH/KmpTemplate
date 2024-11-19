@@ -55,5 +55,12 @@ data class YearMonth
                 val localDateTime = Clock.System.now().toSystemLocalDateTime()
                 return YearMonth(localDateTime.year, localDateTime.monthNumber)
             }
+
+            /**
+             * 日時の情報は無視して変換
+             */
+            fun fromLocalDateTime(localDateTime: LocalDateTime): YearMonth {
+                return YearMonth(localDateTime.year, localDateTime.monthNumber)
+            }
         }
     }
