@@ -31,6 +31,25 @@ data class YearMonth
             return YearMonth(nextYear, nextMonth)
         }
 
+        fun toLabelString(): String {
+            return "${year}/${month}"
+        }
+
+        /**
+         * 現在の年月からuntilで指定した年月までの年月のリストを作成する。
+         * until -> thisの順になったリストを出力
+         */
+        fun makeNextYearMonthList(until: YearMonth): List<YearMonth> {
+            val outputList = mutableListOf<YearMonth>()
+            var base = this
+            while (true) {
+                outputList.add(base)
+                if (base == until) break
+                base = base.makeNextMonth()
+            }
+            return outputList.asReversed()
+        }
+
         companion object {
             fun makeCurrentYearMonth(): YearMonth {
                 val localDateTime = Clock.System.now().toSystemLocalDateTime()
