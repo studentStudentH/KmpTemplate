@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.kmptemplate.android.MyApplicationTheme
@@ -93,7 +94,7 @@ private fun HeaderPanel(
             Box(
                 modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
                     .background(MaterialTheme.colorScheme.error)
             ) {
                 Text(
@@ -108,13 +109,13 @@ private fun HeaderPanel(
             Box(
                 modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = headerState.msg,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
         }
@@ -151,7 +152,7 @@ private fun TopScreenContent(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        Spacer(Modifier.height(24.dp)) // ヘッダーと重ならないようにしている
+        Spacer(Modifier.height(32.dp)) // ヘッダーと重ならないようにしている
         StatisticsPanel(categorySummaryList)
         EditSpanPanel(
             baseYearMonth = baseYearMonth,
@@ -167,6 +168,25 @@ private fun TopScreenContent(
                 onClick = { interactions.onReceiptSelected(receipt) }
             )
             HorizontalDivider()
+        }
+        // データが空の時の表示
+        if (receiptList.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val text = if (endYearMonth == null) {
+                    "右下のボタンから明細を追加しましょう！"
+                } else {
+                    "検索条件を満たすデータは0件です"
+                }
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
     }
 }
@@ -194,6 +214,21 @@ private fun TopScreenPreviewLoading() {
             receiptCollection = ReceiptCollection.makeInstanceForPreview(),
             headerState = HeaderState.Normal("requesting..."),
             loadingState = LoadingState.Loading,
+            startYearMonth = YearMonth(2024, 1),
+            endYearMonth = null,
+            interactions = TopScreenInteractionsStub(),
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun TopScreenPreviewNoData() {
+    MyApplicationTheme {
+        TopScreen(
+            receiptCollection = ReceiptCollection(listOf()),
+            headerState = HeaderState.Normal("requesting..."),
+            loadingState = LoadingState.Completed,
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
