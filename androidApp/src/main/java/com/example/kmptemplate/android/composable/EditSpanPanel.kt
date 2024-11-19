@@ -96,7 +96,7 @@ private fun YearMonthTextField(
 
 @PreviewLightDark
 @Composable
-fun EditSpanPanelPreview() {
+private fun EditSpanPanelPreview() {
     val baseYearMonth = YearMonth(2023, 1)
     MyApplicationTheme {
         Surface {
