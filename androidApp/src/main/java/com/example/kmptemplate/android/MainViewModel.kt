@@ -153,22 +153,24 @@ class MainViewModel(
         viewModelScope.launch {
             _headerState.value = HeaderState.Normal(HEADER_ADD_MSG)
             val categoryResult = feeCategoryRepository.getAllCategory()
-            val addResult = categoryResult.chain {
-                val mostRecentlyUsed = it.getMostRecentlyUsedList().firstOrNull()
-                KermitLogger.d(TAG) { "mostRecentlyUsedCategory = $mostRecentlyUsed" }
-                receiptRepository.add(
-                    cost = cost,
-                    category = mostRecentlyUsed,
-                    createdAt = Clock.System.now()
-                )
-            }
+            val addResult =
+                categoryResult.chain {
+                    val mostRecentlyUsed = it.getMostRecentlyUsedList().firstOrNull()
+                    KermitLogger.d(TAG) { "mostRecentlyUsedCategory = $mostRecentlyUsed" }
+                    receiptRepository.add(
+                        cost = cost,
+                        category = mostRecentlyUsed,
+                        createdAt = Clock.System.now(),
+                    )
+                }
             if (addResult is KmpResult.Failure) {
                 _headerState.value = HeaderState.Error(HEADER_ADD_FAILED_MSG)
                 return@launch
             }
-            val loadResult = addResult.chain {
-                loadReceipts()
-            }
+            val loadResult =
+                addResult.chain {
+                    loadReceipts()
+                }
             when (loadResult) {
                 is KmpResult.Failure -> {
                     _headerState.value = HeaderState.Error(HEADER_RELOAD_FAILED_MSG)
