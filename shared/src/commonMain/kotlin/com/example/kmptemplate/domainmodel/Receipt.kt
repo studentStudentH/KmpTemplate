@@ -1,6 +1,9 @@
 package com.example.kmptemplate.domainmodel
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * @param id: データのid
@@ -18,5 +21,27 @@ data class Receipt
     ) {
         init {
             if (cost < 0) throw IllegalArgumentException("costは0以上にしてください")
+        }
+
+        companion object {
+            @OptIn(ExperimentalUuidApi::class)
+            fun makeInstanceForPreview(
+                cost: Int,
+                categoryName: String,
+            ): Receipt {
+                val pseudoInstant = Clock.System.now()
+                val pseudoId = Uuid.random().toHexString()
+                return Receipt(
+                    id = pseudoId,
+                    cost = cost,
+                    category =
+                        FeeCategory(
+                            id = pseudoId,
+                            name = categoryName,
+                            lastUsedAt = pseudoInstant,
+                        ),
+                    createdAt = pseudoInstant,
+                )
+            }
         }
     }

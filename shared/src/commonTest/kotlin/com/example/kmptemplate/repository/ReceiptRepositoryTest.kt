@@ -11,6 +11,7 @@ import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.YearMonth
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlin.test.DefaultAsserter.assertEquals
@@ -38,7 +39,7 @@ class ReceiptRepositoryTest {
 
             // then
             checkResult(result, "getAllReceipts()が失敗しています。") { receiptCollection ->
-                val receipts = receiptCollection.sortByInstantDecending()
+                val receipts = receiptCollection.sortByInstantDescending()
                 val receiptIds = receipts.map { it.id }.sorted()
                 val expectedIds = dataHolder.receiptList.map { it.id }.sorted()
                 assertEquals(
@@ -63,7 +64,7 @@ class ReceiptRepositoryTest {
 
             // then
             checkResult(result, "getReceiptsNewerThan()が失敗しています。") { receiptCollection ->
-                val receipts = receiptCollection.sortByInstantDecending()
+                val receipts = receiptCollection.sortByInstantDescending()
                 assertEquals(
                     "Receiptの件数が期待と違います",
                     expected = 2,
@@ -98,7 +99,7 @@ class ReceiptRepositoryTest {
 
             // then
             checkResult(result, "getReceiptsNewerThan()が失敗しています。") { receiptCollection ->
-                val receipts = receiptCollection.sortByInstantDecending()
+                val receipts = receiptCollection.sortByInstantDescending()
                 assertEquals(
                     "Receiptの件数が期待と違います",
                     expected = 2,
@@ -238,11 +239,21 @@ class ReceiptRepositoryTest {
                 val id = Uuid.random().toHexString()
                 val cost = 1000
                 val yearMonth = YearMonth(year, baseMonth - index)
+                val yearMonthLocalDateTime = yearMonth.toLocalDateTime()
+                // 年月だけでなく月日の値に関わらず期待値通りの結果が得られることを確認するための設定
+                val createdAt =
+                    LocalDateTime(
+                        year = yearMonthLocalDateTime.year,
+                        monthNumber = yearMonthLocalDateTime.monthNumber,
+                        dayOfMonth = 29,
+                        hour = 23,
+                        minute = 59,
+                    )
                 RoomReceipt(
                     id,
                     cost,
                     feeCategory.id,
-                    yearMonth.toLocalDateTime().toInstant(TimeZone.currentSystemDefault()),
+                    createdAt.toInstant(TimeZone.currentSystemDefault()),
                 )
             }
         return SimulatedDataHolder(

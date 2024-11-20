@@ -1,19 +1,39 @@
 package com.example.kmptemplate.domainmodel
 
 import com.example.kmptemplate.util.toSystemLocalDateTime
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 
 data class ReceiptCollection(
     private val receipts: List<Receipt>,
 ) {
     val totalCost: Int
-        get() = receipts.sumOf { it.cost }
+        get() {
+            if (receipts.isEmpty()) {
+                return 0
+            }
+            return receipts.sumOf { it.cost }
+        }
 
     val firstInstant: Instant
-        get() = receipts.minOf { it.createdAt }
+        get() {
+            if (receipts.isEmpty()) {
+                return YearMonth(2024, 1)
+                    .toLocalDateTime()
+                    .toInstant(TimeZone.currentSystemDefault())
+            }
+            return receipts.minOf { it.createdAt }
+        }
 
     val lastInstant: Instant
-        get() = receipts.maxOf { it.createdAt }
+        get() {
+            if (receipts.isEmpty()) {
+                return Clock.System.now()
+            }
+            return receipts.maxOf { it.createdAt }
+        }
 
     /**
      * 同じカテゴリのレシートをまとめたコレクションを返す
@@ -28,7 +48,7 @@ data class ReceiptCollection(
     /**
      * 時刻順にソートしてアイテムのリストを返す
      */
-    fun sortByInstantDecending(): List<Receipt> {
+    fun sortByInstantDescending(): List<Receipt> {
         return receipts.sortedByDescending { it.createdAt }
     }
 
@@ -75,7 +95,9 @@ data class ReceiptCollection(
     fun extractNewerThan(yearMonth: YearMonth): ReceiptCollection {
         val filteredList =
             receipts.filter {
-                it.createdAt.toSystemLocalDateTime() >= yearMonth.toLocalDateTime()
+                // 日時の影響をなくすために一度YearMonthに変換してから比較
+                val createdAt = YearMonth.fromLocalDateTime(it.createdAt.toSystemLocalDateTime())
+                createdAt.toLocalDateTime() >= yearMonth.toLocalDateTime()
             }
         return ReceiptCollection(filteredList)
     }
@@ -83,8 +105,20 @@ data class ReceiptCollection(
     fun extractOlderThan(yearMonth: YearMonth): ReceiptCollection {
         val filteredList =
             receipts.filter {
-                it.createdAt.toSystemLocalDateTime() <= yearMonth.toLocalDateTime()
+                // 日時の影響をなくすために一度YearMonthに変換してから比較
+                val createdAt = YearMonth.fromLocalDateTime(it.createdAt.toSystemLocalDateTime())
+                createdAt.toLocalDateTime() <= yearMonth.toLocalDateTime()
             }
         return ReceiptCollection(filteredList)
+    }
+
+    companion object {
+        fun makeInstanceForPreview(): ReceiptCollection {
+            val receipt01 = Receipt.makeInstanceForPreview(1000, "食費")
+            val receipt02 = Receipt.makeInstanceForPreview(2500, "食費")
+            val receipt03 = Receipt.makeInstanceForPreview(3000, "光熱費")
+            val receipt04 = Receipt.makeInstanceForPreview(8020, "その他")
+            return ReceiptCollection(listOf(receipt01, receipt02, receipt03, receipt04))
+        }
     }
 }
