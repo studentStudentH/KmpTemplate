@@ -17,6 +17,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,8 +45,18 @@ fun TopScreen(
     interactions: TopScreenInteractions,
     modifier: Modifier = Modifier,
 ) {
+    var showAddReceiptModal by remember { mutableStateOf(false) }
+    if (showAddReceiptModal) {
+        AddReceiptModal(
+            initialInputValue = "",
+            onDismiss = { showAddReceiptModal = false },
+            onAdd = { interactions.onAddReceipt(it) }
+        )
+    }
     Scaffold(
-        floatingActionButton =  { MyFloatingActionButton { } }
+        floatingActionButton =  {
+            MyFloatingActionButton { showAddReceiptModal = true }
+        }
     ) {
         // 悪いマナーだが、ヘッダーの有無でアイテムの位置が変わると煩わしいので
         // Boxをつかって重なりを許容する形で配置している
