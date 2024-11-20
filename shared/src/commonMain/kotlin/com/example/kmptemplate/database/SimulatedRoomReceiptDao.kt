@@ -61,6 +61,6 @@ internal class SimulatedRoomReceiptDao(
 
     private companion object {
         const val TAG = "SimulatedRoomReceiptDao"
-        const val DELAY_MILLIS = 3000L
+        const val DELAY_MILLIS = 1000L
     }
 }
