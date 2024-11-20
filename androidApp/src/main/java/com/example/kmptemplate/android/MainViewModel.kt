@@ -155,6 +155,7 @@ class MainViewModel(
             val categoryResult = feeCategoryRepository.getAllCategory()
             val addResult = categoryResult.chain {
                 val mostRecentlyUsed = it.getMostRecentlyUsedList().firstOrNull()
+                KermitLogger.d(TAG) { "mostRecentlyUsedCategory = $mostRecentlyUsed" }
                 receiptRepository.add(
                     cost = cost,
                     category = mostRecentlyUsed,
