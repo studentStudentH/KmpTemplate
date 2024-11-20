@@ -51,7 +51,7 @@ fun ReceiptListItem(
                 unitLabelStyle = MaterialTheme.typography.labelSmall,
             )
             Text(
-                text = dateLabelText,
+                text = "$dateLabelText ${receipt.category?.name ?: ""}",
                 color = MaterialTheme.colorScheme.outline,
                 style = MaterialTheme.typography.labelSmall,
             )
