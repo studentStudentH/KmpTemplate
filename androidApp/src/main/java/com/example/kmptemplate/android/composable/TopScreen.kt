@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -17,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -164,6 +168,11 @@ private fun TopScreenContent(
     val baseYearMonth = YearMonth(year = 2024, month = 1)
     val categorySummaryList = receiptCollection.splitByCategory().map { it.makeCategorySummary() }
     val receiptList = receiptCollection.sortByInstantDescending()
+    val listState = rememberLazyListState()
+    // アイテム数が変わった時に最初のアイテムの場所へスクロールする
+    LaunchedEffect(receiptList.size) {
+        listState.scrollToItem(0)
+    }
     Column(
         modifier = modifier.fillMaxWidth(),
     ) {
@@ -177,12 +186,15 @@ private fun TopScreenContent(
             onSelectEndYearMonth = { interactions.onEndYearMonthChanged(it) },
         )
         HorizontalDivider()
-        receiptList.forEach { receipt ->
-            ReceiptListItem(
-                receipt = receipt,
-                onClick = { interactions.onReceiptSelected(receipt) },
-            )
-            HorizontalDivider()
+        LazyColumn(state = listState) {
+            items(receiptList, key = { it.id }) { receipt ->
+                ReceiptListItem(
+                    modifier = Modifier.animateItem(),
+                    receipt = receipt,
+                    onClick = { interactions.onReceiptSelected(receipt) },
+                )
+                HorizontalDivider()
+            }
         }
         // データが空の時の表示
         if (receiptList.isEmpty()) {
