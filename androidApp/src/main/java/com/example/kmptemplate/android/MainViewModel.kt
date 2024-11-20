@@ -8,12 +8,14 @@ import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.Receipt
 import com.example.kmptemplate.domainmodel.ReceiptCollection
 import com.example.kmptemplate.domainmodel.YearMonth
+import com.example.kmptemplate.domainmodel.chain
 import com.example.kmptemplate.repository.FeeCategoryRepository
 import com.example.kmptemplate.repository.ReceiptRepository
 import com.example.kmptemplate.util.KermitLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 
 class MainViewModel(
     private val receiptRepository: ReceiptRepository,
@@ -148,13 +150,43 @@ class MainViewModel(
     // Addを押すと数字入力画面が現れて数字を入れるとこの関数が呼び出される
     override fun onAddReceipt(cost: Int) {
         KermitLogger.d(TAG) { "onAddReceipt() cost = $cost" }
-        // TODO()
+        viewModelScope.launch {
+            _headerState.value = HeaderState.Normal(HEADER_ADD_MSG)
+            val categoryResult = feeCategoryRepository.getAllCategory()
+            val addResult = categoryResult.chain {
+                val mostRecentlyUsed = it.getMostRecentlyUsedList().firstOrNull()
+                receiptRepository.add(
+                    cost = cost,
+                    category = mostRecentlyUsed,
+                    createdAt = Clock.System.now()
+                )
+            }
+            if (addResult is KmpResult.Failure) {
+                _headerState.value = HeaderState.Error(HEADER_ADD_FAILED_MSG)
+                return@launch
+            }
+            val loadResult = addResult.chain {
+                loadReceipts()
+            }
+            when (loadResult) {
+                is KmpResult.Failure -> {
+                    _headerState.value = HeaderState.Error(HEADER_RELOAD_FAILED_MSG)
+                }
+                is KmpResult.Success -> {
+                    _headerState.value = HeaderState.Normal(HEADER_ADD_SUCCESS_MSG)
+                    _receiptCollection.value = loadResult.value
+                }
+            }
+        }
     }
 
     private companion object {
         const val TAG = "MainViewModel"
         const val HEADER_RELOAD_MSG = "reloading..."
         const val HEADER_RELOAD_FAILED_MSG = "reload failed"
+        const val HEADER_ADD_MSG = "adding..."
+        const val HEADER_ADD_SUCCESS_MSG = "successfully added"
+        const val HEADER_ADD_FAILED_MSG = "failed to add"
     }
 }
 
