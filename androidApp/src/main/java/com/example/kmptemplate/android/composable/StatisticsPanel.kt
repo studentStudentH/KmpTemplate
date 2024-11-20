@@ -3,7 +3,6 @@ package com.example.kmptemplate.android.composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -24,20 +23,21 @@ fun StatisticsPanel(
 ) {
     val totalCost = categorySummaryList.sumOf { it.totalCost }
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = "総出費",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
         )
         CostLabel(
             cost = totalCost,
             costLabelStyle = MaterialTheme.typography.headlineLarge,
-            unitLabelStyle = MaterialTheme.typography.labelSmall
+            unitLabelStyle = MaterialTheme.typography.labelSmall,
         )
         categorySummaryList.forEach {
             CategorySummaryItem(categorySummary = it)
@@ -51,25 +51,25 @@ private fun CategorySummaryItem(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(
-            horizontal = 16.dp,
-            vertical = 4.dp
-        ),
+        modifier =
+            modifier.fillMaxWidth().padding(
+                horizontal = 16.dp,
+                vertical = 4.dp,
+            ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = categorySummary.categoryName,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
         CostLabel(
             cost = categorySummary.totalCost,
             costLabelStyle = MaterialTheme.typography.titleMedium,
-            unitLabelStyle = MaterialTheme.typography.labelSmall
+            unitLabelStyle = MaterialTheme.typography.labelSmall,
         )
     }
 }
-
 
 @PreviewLightDark
 @Composable
@@ -77,11 +77,12 @@ private fun StatisticsPanelPreview() {
     MyApplicationTheme {
         Surface {
             StatisticsPanel(
-                categorySummaryList = listOf(
-                    CategorySummary(totalCost = 1000, categoryName = "食費"),
-                    CategorySummary(totalCost = 2000, categoryName = "交通費"),
-                    CategorySummary(totalCost = 3000, categoryName = "その他"),
-                )
+                categorySummaryList =
+                    listOf(
+                        CategorySummary(totalCost = 1000, categoryName = "食費"),
+                        CategorySummary(totalCost = 2000, categoryName = "交通費"),
+                        CategorySummary(totalCost = 3000, categoryName = "その他"),
+                    ),
             )
         }
     }

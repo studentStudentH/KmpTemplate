@@ -15,18 +15,18 @@ fun CostLabel(
     cost: Int,
     costLabelStyle: TextStyle,
     unitLabelStyle: TextStyle,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier) {
         Text(
             text = cost.toString(),
             style = costLabelStyle,
-            modifier = Modifier.alignByBaseline()
+            modifier = Modifier.alignByBaseline(),
         )
         Text(
             text = "円",
             style = unitLabelStyle,
-            modifier = Modifier.alignByBaseline()
+            modifier = Modifier.alignByBaseline(),
         )
     }
 }
@@ -39,7 +39,7 @@ private fun CostLabelPreview() {
             CostLabel(
                 cost = 1000,
                 costLabelStyle = MaterialTheme.typography.titleLarge,
-                unitLabelStyle = MaterialTheme.typography.labelSmall
+                unitLabelStyle = MaterialTheme.typography.labelSmall,
             )
         }
     }

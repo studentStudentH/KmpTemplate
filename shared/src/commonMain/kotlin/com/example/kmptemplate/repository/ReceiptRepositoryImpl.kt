@@ -44,10 +44,10 @@ internal class ReceiptRepositoryImpl(
     ): KmpResult<ReceiptCollection> {
         KermitLogger.d(TAG) {
             """
-                oldestYear = $oldestYear,
-                oldestMonth = $oldestMonth,
-                newestYear = $newestYear,
-                newestMonth = $newestMonth,
+            oldestYear = $oldestYear,
+            oldestMonth = $oldestMonth,
+            newestYear = $newestYear,
+            newestMonth = $newestMonth,
             """.trimIndent()
         }
         return tryApiRequest("getReceiptsBetween") {

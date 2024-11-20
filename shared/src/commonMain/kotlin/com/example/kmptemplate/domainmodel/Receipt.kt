@@ -27,19 +27,20 @@ data class Receipt
             @OptIn(ExperimentalUuidApi::class)
             fun makeInstanceForPreview(
                 cost: Int,
-                categoryName: String
+                categoryName: String,
             ): Receipt {
                 val pseudoInstant = Clock.System.now()
                 val pseudoId = Uuid.random().toHexString()
                 return Receipt(
                     id = pseudoId,
                     cost = cost,
-                    category = FeeCategory(
-                        id = pseudoId,
-                        name = categoryName,
-                        lastUsedAt = pseudoInstant
-                    ),
-                    createdAt = pseudoInstant
+                    category =
+                        FeeCategory(
+                            id = pseudoId,
+                            name = categoryName,
+                            lastUsedAt = pseudoInstant,
+                        ),
+                    createdAt = pseudoInstant,
                 )
             }
         }

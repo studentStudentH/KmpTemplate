@@ -27,11 +27,11 @@ fun FullScreenModal(
 ) {
     Dialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = { onDismiss() }
+        onDismissRequest = { onDismiss() },
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            topBar = { ModalTopBar(title, onDismiss) }
+            topBar = { ModalTopBar(title, onDismiss) },
         ) {
             Box(modifier = Modifier.padding(it)) {
                 content()
@@ -44,12 +44,12 @@ fun FullScreenModal(
 @Composable
 private fun ModalTopBar(
     title: String = "",
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
 ) {
     TopAppBar(
         title = { Text(title) },
         navigationIcon = {
-            IconButton(onClick = onCloseClick ) {
+            IconButton(onClick = onCloseClick) {
                 Icon(Icons.Outlined.Close, contentDescription = "Close")
             }
         },
@@ -62,11 +62,11 @@ private fun FullScreenModalPreview() {
     MyApplicationTheme {
         FullScreenModal(
             title = "full screen modal",
-            onDismiss = {}
+            onDismiss = {},
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text("hello")
             }

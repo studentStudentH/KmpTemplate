@@ -32,7 +32,7 @@ data class YearMonth
         }
 
         fun toLabelString(): String {
-            return "${year}/${month}"
+            return "$year/$month"
         }
 
         /**

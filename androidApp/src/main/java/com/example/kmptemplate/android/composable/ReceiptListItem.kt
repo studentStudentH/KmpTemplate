@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,19 +30,20 @@ import kotlinx.datetime.toInstant
 fun ReceiptListItem(
     receipt: Receipt,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     val dateLabelText = receipt.createdAt.toSystemLocalDateTime().dateFormat()
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             CostLabel(
                 cost = receipt.cost,
@@ -53,13 +53,13 @@ fun ReceiptListItem(
             Text(
                 text = dateLabelText,
                 color = MaterialTheme.colorScheme.outline,
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
             )
         }
         Icon(
             imageVector = Icons.Default.ChevronRight,
             contentDescription = "${receipt.cost}円、${dateLabelText}の詳細へ",
-            tint = MaterialTheme.colorScheme.outlineVariant
+            tint = MaterialTheme.colorScheme.outlineVariant,
         )
     }
 }
@@ -67,28 +67,30 @@ fun ReceiptListItem(
 @PreviewLightDark
 @Composable
 private fun ReceiptListItemPreview() {
-    val pseudoInstant = LocalDateTime(
-        year = 2024,
-        monthNumber = 1,
-        dayOfMonth = 1,
-        hour = 1,
-        minute = 0,
-        second = 0
-    ).toInstant(TimeZone.currentSystemDefault())
-    val receipt = Receipt(
-        id = "pseudo_id",
-        cost = 1000,
-        category = FeeCategory(
+    val pseudoInstant =
+        LocalDateTime(
+            year = 2024,
+            monthNumber = 1,
+            dayOfMonth = 1,
+            hour = 1,
+            minute = 0,
+            second = 0,
+        ).toInstant(TimeZone.currentSystemDefault())
+    val receipt =
+        Receipt(
             id = "pseudo_id",
-            name = "食費",
-            lastUsedAt = pseudoInstant
-        ),
-        createdAt = pseudoInstant
-    )
+            cost = 1000,
+            category =
+                FeeCategory(
+                    id = "pseudo_id",
+                    name = "食費",
+                    lastUsedAt = pseudoInstant,
+                ),
+            createdAt = pseudoInstant,
+        )
     MyApplicationTheme {
         Surface {
             ReceiptListItem(receipt)
         }
     }
 }
-

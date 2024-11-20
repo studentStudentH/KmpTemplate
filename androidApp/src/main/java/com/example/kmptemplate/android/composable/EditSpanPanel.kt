@@ -34,24 +34,24 @@ fun EditSpanPanel(
     endYearMonth: YearMonth?,
     onSelectStartYearMonth: (YearMonth) -> Unit,
     onSelectEndYearMonth: (YearMonth) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         YearMonthTextField(
             textFieldValue = startYearMonth.toLabelString(),
             baseYearMonth = baseYearMonth,
             label = "開始月を入力してください",
-            onYearMonthSelected = onSelectStartYearMonth
+            onYearMonthSelected = onSelectStartYearMonth,
         )
         YearMonthTextField(
             textFieldValue = endYearMonth?.toLabelString() ?: "",
             baseYearMonth = baseYearMonth,
             label = "終了月を入力してください",
-            onYearMonthSelected = onSelectEndYearMonth
+            onYearMonthSelected = onSelectEndYearMonth,
         )
     }
 }
@@ -72,24 +72,25 @@ private fun YearMonthTextField(
         readOnly = true,
         trailingIcon = {
             IconButton(
-                onClick = { showDialog = true }
+                onClick = { showDialog = true },
             ) {
                 Icon(
                     imageVector = Icons.Default.CalendarMonth,
-                    contentDescription = label
+                    contentDescription = label,
                 )
             }
         },
-        modifier = modifier
-            .fillMaxWidth()
-            .height(64.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(64.dp),
     )
     if (showDialog) {
         SelectYearMonthModal(
             title = label,
             baseYearMonth = baseYearMonth,
             onDismiss = { showDialog = false },
-            onSelectYearMonth = onYearMonthSelected
+            onSelectYearMonth = onYearMonthSelected,
         )
     }
 }
@@ -105,7 +106,7 @@ private fun EditSpanPanelPreview() {
                 startYearMonth = YearMonth.makeCurrentYearMonth(),
                 endYearMonth = null,
                 onSelectStartYearMonth = {},
-                onSelectEndYearMonth = {}
+                onSelectEndYearMonth = {},
             )
         }
     }

@@ -50,20 +50,20 @@ fun TopScreen(
         AddReceiptModal(
             initialInputValue = "",
             onDismiss = { showAddReceiptModal = false },
-            onAdd = { interactions.onAddReceipt(it) }
+            onAdd = { interactions.onAddReceipt(it) },
         )
     }
     Scaffold(
-        floatingActionButton =  {
+        floatingActionButton = {
             MyFloatingActionButton { showAddReceiptModal = true }
-        }
+        },
     ) {
         // 悪いマナーだが、ヘッダーの有無でアイテムの位置が変わると煩わしいので
         // Boxをつかって重なりを許容する形で配置している
         // ToDo: ヘッダーを透明にするなど別のアプローチを取る
         Box(modifier = modifier.padding(it)) {
             HeaderPanel(headerState)
-            when(loadingState) {
+            when (loadingState) {
                 LoadingState.Loading -> {
                     MessagePanel(text = "Loading...")
                 }
@@ -80,7 +80,7 @@ fun TopScreen(
                         startYearMonth,
                         endYearMonth,
                         interactions,
-                        modifier.padding(it)
+                        modifier.padding(it),
                     )
                 }
             }
@@ -91,7 +91,7 @@ fun TopScreen(
 @Composable
 private fun MyFloatingActionButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     FloatingActionButton(onClick = onClick, modifier = modifier) {
         Icon(Icons.Filled.Add, "Floating action button.")
@@ -101,15 +101,15 @@ private fun MyFloatingActionButton(
 @Composable
 private fun HeaderPanel(
     headerState: HeaderState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    when(headerState) {
+    when (headerState) {
         is HeaderState.Error -> {
             Box(
                 modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 8.dp)
-                    .background(MaterialTheme.colorScheme.error)
+                    .background(MaterialTheme.colorScheme.error),
             ) {
                 Text(
                     text = headerState.msg,
@@ -124,7 +124,7 @@ private fun HeaderPanel(
                 modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primary)
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
             ) {
                 Text(
                     text = headerState.msg,
@@ -139,14 +139,15 @@ private fun HeaderPanel(
 @Composable
 private fun MessagePanel(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = text, style = MaterialTheme.typography.bodyLarge
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
@@ -164,7 +165,7 @@ private fun TopScreenContent(
     val categorySummaryList = receiptCollection.splitByCategory().map { it.makeCategorySummary() }
     val receiptList = receiptCollection.sortByInstantDescending()
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Spacer(Modifier.height(32.dp)) // ヘッダーと重ならないようにしている
         StatisticsPanel(categorySummaryList)
@@ -173,13 +174,13 @@ private fun TopScreenContent(
             startYearMonth = startYearMonth,
             endYearMonth = endYearMonth,
             onSelectStartYearMonth = { interactions.onStartYearMonthChanged(it) },
-            onSelectEndYearMonth = { interactions.onEndYearMonthChanged(it) }
+            onSelectEndYearMonth = { interactions.onEndYearMonthChanged(it) },
         )
         HorizontalDivider()
         receiptList.forEach { receipt ->
             ReceiptListItem(
                 receipt = receipt,
-                onClick = { interactions.onReceiptSelected(receipt) }
+                onClick = { interactions.onReceiptSelected(receipt) },
             )
             HorizontalDivider()
         }
@@ -187,18 +188,19 @@ private fun TopScreenContent(
         if (receiptList.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
-                val text = if (endYearMonth == null) {
-                    "右下のボタンから明細を追加しましょう！"
-                } else {
-                    "検索条件を満たすデータは0件です"
-                }
+                val text =
+                    if (endYearMonth == null) {
+                        "右下のボタンから明細を追加しましょう！"
+                    } else {
+                        "検索条件を満たすデータは0件です"
+                    }
                 Text(
                     text = text,
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
         }
@@ -253,7 +255,7 @@ private fun TopScreenPreviewNoData() {
 /**
  * Preview用
  */
-private class TopScreenInteractionsStub: TopScreenInteractions {
+private class TopScreenInteractionsStub : TopScreenInteractions {
     override fun onReceiptSelected(receipt: Receipt) {}
 
     override fun onAddReceipt(cost: Int) {}

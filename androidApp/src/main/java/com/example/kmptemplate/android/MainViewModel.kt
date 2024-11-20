@@ -29,9 +29,10 @@ class MainViewModel(
     val initialLoadingState: StateFlow<LoadingState> = _initialLoadingState
 
     // 表示対象のreceiptの開始月
-    private val _startYearMonth = MutableStateFlow(
-        YearMonth.makeCurrentYearMonth()
-    )
+    private val _startYearMonth =
+        MutableStateFlow(
+            YearMonth.makeCurrentYearMonth(),
+        )
     val startYearMonth: StateFlow<YearMonth> = _startYearMonth
 
     private val _endYearMonth = MutableStateFlow<YearMonth?>(null)
@@ -82,16 +83,17 @@ class MainViewModel(
 
     // 検索対象の指定の仕方に合わせてクエリメソッドを実行
     private suspend fun loadReceipts(): KmpResult<ReceiptCollection> {
-        val endYearMonthValue = endYearMonth.value
-            ?: return receiptRepository.getReceiptsNewerThan(
-                startYearMonth.value.year,
-                startYearMonth.value.month
-            )
+        val endYearMonthValue =
+            endYearMonth.value
+                ?: return receiptRepository.getReceiptsNewerThan(
+                    startYearMonth.value.year,
+                    startYearMonth.value.month,
+                )
         return receiptRepository.getReceiptsBetween(
             startYearMonth.value.year,
             startYearMonth.value.month,
             endYearMonthValue.year,
-            endYearMonthValue.month
+            endYearMonthValue.month,
         )
     }
 
@@ -127,11 +129,12 @@ class MainViewModel(
 
     fun changeToNextMonth() {
         val nextStartMonth = _startYearMonth.value
-        val nextEndMonth = if (_endYearMonth.value == YearMonth.makeCurrentYearMonth()) {
-            null
-        } else {
-            _endYearMonth.value?.makeNextMonth()
-        }
+        val nextEndMonth =
+            if (_endYearMonth.value == YearMonth.makeCurrentYearMonth()) {
+                null
+            } else {
+                _endYearMonth.value?.makeNextMonth()
+            }
         _startYearMonth.value = nextStartMonth
         _endYearMonth.value = nextEndMonth
         reloadReceipts()

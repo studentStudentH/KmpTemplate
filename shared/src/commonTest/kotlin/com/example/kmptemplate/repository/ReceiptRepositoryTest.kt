@@ -241,13 +241,14 @@ class ReceiptRepositoryTest {
                 val yearMonth = YearMonth(year, baseMonth - index)
                 val yearMonthLocalDateTime = yearMonth.toLocalDateTime()
                 // 年月だけでなく月日の値に関わらず期待値通りの結果が得られることを確認するための設定
-                val createdAt = LocalDateTime(
-                    year = yearMonthLocalDateTime.year,
-                    monthNumber = yearMonthLocalDateTime.monthNumber,
-                    dayOfMonth = 29,
-                    hour = 23,
-                    minute = 59,
-                )
+                val createdAt =
+                    LocalDateTime(
+                        year = yearMonthLocalDateTime.year,
+                        monthNumber = yearMonthLocalDateTime.monthNumber,
+                        dayOfMonth = 29,
+                        hour = 23,
+                        minute = 59,
+                    )
                 RoomReceipt(
                     id,
                     cost,

@@ -26,16 +26,16 @@ fun AddReceiptModal(
     initialInputValue: String,
     onDismiss: () -> Unit,
     onAdd: (receiptCost: Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var inputText by remember { mutableStateOf(initialInputValue) }
     FullScreenModal(
         title = "値段を入力してください",
-        onDismiss = onDismiss
+        onDismiss = onDismiss,
     ) {
         Column(
             modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.fillMaxWidth().height(16.dp))
             // Enterを押したらonAddが呼び出されるようにする
@@ -48,22 +48,25 @@ fun AddReceiptModal(
                 supportingText = {
                     Text(
                         text = makeSupportingText(inputText),
-                        color = MaterialTheme.colorScheme.error
-                    ) },
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                },
                 singleLine = true,
                 maxLines = 1,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = androidx.compose.ui.text.input.ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        if (isValidNumber(inputText)) {
-                            onAdd(inputText.toInt())
-                            onDismiss()
-                        }
-                    }
-                )
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onDone = {
+                            if (isValidNumber(inputText)) {
+                                onAdd(inputText.toInt())
+                                onDismiss()
+                            }
+                        },
+                    ),
             )
         }
     }
@@ -89,7 +92,7 @@ private fun AddReceiptModalPreviewWithNumber() {
         AddReceiptModal(
             initialInputValue = "10",
             onDismiss = {},
-            onAdd = {}
+            onAdd = {},
         )
     }
 }
@@ -101,7 +104,7 @@ private fun AddReceiptModalPreviewWithInvalidNumber() {
         AddReceiptModal(
             initialInputValue = "-10",
             onDismiss = {},
-            onAdd = {}
+            onAdd = {},
         )
     }
 }
@@ -113,7 +116,7 @@ private fun AddReceiptModalPreviewWithNotNumber() {
         AddReceiptModal(
             initialInputValue = "hello",
             onDismiss = {},
-            onAdd = {}
+            onAdd = {},
         )
     }
 }

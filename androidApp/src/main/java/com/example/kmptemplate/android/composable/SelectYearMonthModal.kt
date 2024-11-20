@@ -10,7 +10,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -23,17 +22,17 @@ fun SelectYearMonthModal(
     title: String,
     baseYearMonth: YearMonth,
     onDismiss: () -> Unit,
-    onSelectYearMonth: (YearMonth) -> Unit
+    onSelectYearMonth: (YearMonth) -> Unit,
 ) {
     val yearMonthList = baseYearMonth.makeNextYearMonthList(YearMonth.makeCurrentYearMonth())
     FullScreenModal(
         title = title,
-        onDismiss = onDismiss
+        onDismiss = onDismiss,
     ) {
         YearMonthList(
             items = yearMonthList,
             onDismiss = onDismiss,
-            onSelectYearMonth = onSelectYearMonth
+            onSelectYearMonth = onSelectYearMonth,
         )
     }
 }
@@ -43,25 +42,26 @@ private fun YearMonthList(
     items: List<YearMonth>,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    onSelectYearMonth: (YearMonth) -> Unit
+    onSelectYearMonth: (YearMonth) -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         HorizontalDivider()
         items.forEach {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onSelectYearMonth(it)
-                        onDismiss() // アイテムを選択したら画面を閉じる
-                    }
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onSelectYearMonth(it)
+                            onDismiss() // アイテムを選択したら画面を閉じる
+                        }
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
             ) {
                 Text(
                     text = it.toLabelString(),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
             HorizontalDivider()
@@ -79,7 +79,7 @@ private fun SelectYearMonthModalPreview() {
                 title = "test",
                 baseYearMonth = baseYearMonth,
                 onDismiss = {},
-                onSelectYearMonth = {}
+                onSelectYearMonth = {},
             )
         }
     }
