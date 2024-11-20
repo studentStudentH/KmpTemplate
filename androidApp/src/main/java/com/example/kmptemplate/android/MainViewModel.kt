@@ -47,6 +47,7 @@ class MainViewModel(
         _initialLoadingState.value = LoadingState.Loading
         viewModelScope.launch {
             val result = loadReceipts()
+            KermitLogger.d(TAG) { "loadInitialReceiptResult = $result" }
             when (result) {
                 is KmpResult.Failure -> {
                     _initialLoadingState.value = LoadingState.LoadFailed(result.error.msg)
@@ -66,6 +67,7 @@ class MainViewModel(
         _headerState.value = HeaderState.Normal(HEADER_RELOAD_MSG)
         viewModelScope.launch {
             val result = loadReceipts()
+            KermitLogger.d(TAG) { "reloadReceiptResult = $result" }
             when (result) {
                 is KmpResult.Failure -> {
                     _headerState.value = HeaderState.Error(HEADER_RELOAD_FAILED_MSG)
@@ -99,7 +101,7 @@ class MainViewModel(
             _startYearMonth.value = newStartYearMonth
             reloadReceipts()
         } catch (e: IllegalArgumentException) {
-            KermitLogger.e(TAG) { "changeStartYearMonth() e = $e" }
+            KermitLogger.e(TAG) { "onStartYearMonthChanged() e = $e" }
             _headerState.value = HeaderState.Error("入力が不正です")
         }
     }
@@ -110,7 +112,7 @@ class MainViewModel(
             _endYearMonth.value = newEndYearMonth
             reloadReceipts()
         } catch (e: IllegalArgumentException) {
-            KermitLogger.e(TAG) { "changeEndYearMonth() e = $e" }
+            KermitLogger.e(TAG) { "onEndYearMonthChanged() e = $e" }
             _headerState.value = HeaderState.Error("入力が不正です")
         }
     }
@@ -136,11 +138,13 @@ class MainViewModel(
     }
 
     override fun onReceiptSelected(receipt: Receipt) {
+        KermitLogger.d(TAG) { "onReceiptSelected() receipt = $receipt" }
         // ToDo()
     }
 
     // Addを押すと数字入力画面が現れて数字を入れるとこの関数が呼び出される
     override fun onAddReceipt(cost: Int) {
+        KermitLogger.d(TAG) { "onAddReceipt() cost = $cost" }
         // TODO()
     }
 
