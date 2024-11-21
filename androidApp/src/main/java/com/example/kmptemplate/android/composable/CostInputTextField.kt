@@ -3,6 +3,8 @@ package com.example.kmptemplate.android.composable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -12,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.example.kmptemplate.android.MyApplicationTheme
@@ -19,18 +22,20 @@ import com.example.kmptemplate.android.MyApplicationTheme
 @Composable
 fun CostInputTextField(
     initialInputValue: String,
+    labelText: String,
     onDone: (cost: Int) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var inputText by remember { mutableStateOf(initialInputValue) }
-    TextField(
+    OutlinedTextField(
         value = inputText,
         onValueChange = {
             inputText = it
         },
         modifier = modifier,
-        isError = isValidNumber(inputText),
+        label = { Text(labelText) },
+        isError = !isValidNumber(inputText),
         supportingText = {
             Text(
                 text = makeSupportingText(inputText),
@@ -75,7 +80,8 @@ private fun CostInputTextFieldPreviewWithNumber() {
     MyApplicationTheme {
         Surface {
             CostInputTextField(
-                initialInputValue = "",
+                initialInputValue = "10",
+                labelText = "値段",
                 onDone = {},
                 onDismiss = {},
             )
