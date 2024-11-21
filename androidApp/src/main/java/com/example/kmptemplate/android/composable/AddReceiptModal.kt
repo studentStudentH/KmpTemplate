@@ -28,7 +28,6 @@ fun AddReceiptModal(
     onAdd: (receiptCost: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var inputText by remember { mutableStateOf(initialInputValue) }
     FullScreenModal(
         title = "値段を入力してください",
         onDismiss = onDismiss,
@@ -39,50 +38,13 @@ fun AddReceiptModal(
         ) {
             Spacer(modifier = Modifier.fillMaxWidth().height(16.dp))
             // Enterを押したらonAddが呼び出されるようにする
-            TextField(
-                value = inputText,
-                onValueChange = {
-                    inputText = it
-                },
-                isError = isValidNumber(inputText),
-                supportingText = {
-                    Text(
-                        text = makeSupportingText(inputText),
-                        color = MaterialTheme.colorScheme.error,
-                    )
-                },
-                singleLine = true,
-                maxLines = 1,
-                keyboardOptions =
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = androidx.compose.ui.text.input.ImeAction.Done,
-                    ),
-                keyboardActions =
-                    KeyboardActions(
-                        onDone = {
-                            if (isValidNumber(inputText)) {
-                                onAdd(inputText.toInt())
-                                onDismiss()
-                            }
-                        },
-                    ),
+            CostInputTextField(
+                initialInputValue = initialInputValue,
+                onDone = onAdd,
+                onDismiss = onDismiss,
             )
         }
     }
-}
-
-private fun isValidNumber(number: String): Boolean {
-    val intNumber = number.toIntOrNull() ?: return false
-    return intNumber > 0
-}
-
-private fun makeSupportingText(number: String): String {
-    val intNumber = number.toIntOrNull() ?: return "数字を入力してください"
-    if (intNumber < 0) {
-        return "0円以上を入力してください"
-    }
-    return ""
 }
 
 @PreviewLightDark
