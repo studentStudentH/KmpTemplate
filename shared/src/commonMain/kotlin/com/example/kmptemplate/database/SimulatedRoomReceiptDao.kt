@@ -19,8 +19,10 @@ internal class SimulatedRoomReceiptDao(
         val categories = dataHolder.feeCategoryList
         val map = mutableMapOf<RoomReceipt, FeeCategory>()
         receipts.forEach { receipt ->
-            val category = categories.first { it.id == receipt.categoryId }
-            map[receipt] = category
+            receipt.categoryId?.let { categoryId ->
+                val category = categories.first { it.id == categoryId }
+                map[receipt] = category
+            }
         }
         return map
     }
