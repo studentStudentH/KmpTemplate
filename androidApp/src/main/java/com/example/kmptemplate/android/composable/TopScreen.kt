@@ -46,6 +46,7 @@ fun TopScreen(
     startYearMonth: YearMonth,
     endYearMonth: YearMonth?,
     interactions: TopScreenInteractions,
+    navigateToReceiptDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showAddReceiptModal by remember { mutableStateOf(false) }
@@ -83,6 +84,7 @@ fun TopScreen(
                         startYearMonth,
                         endYearMonth,
                         interactions,
+                        navigateToReceiptDetail,
                         modifier.padding(it),
                     )
                 }
@@ -123,6 +125,7 @@ private fun TopScreenContent(
     startYearMonth: YearMonth,
     endYearMonth: YearMonth?,
     interactions: TopScreenInteractions,
+    navigateToReceiptDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // ToDo: ユーザデータの一番早い時刻を代入するように修正すべき
@@ -152,7 +155,10 @@ private fun TopScreenContent(
                 ReceiptListItem(
                     modifier = Modifier.animateItem(),
                     receipt = receipt,
-                    onClick = { interactions.onReceiptSelected(receipt) },
+                    onClick = {
+                        interactions.onReceiptSelected(receipt)
+                        navigateToReceiptDetail()
+                              },
                 )
                 HorizontalDivider()
             }
@@ -191,6 +197,7 @@ private fun TopScreenPreviewNormal() {
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
+            navigateToReceiptDetail = {},
         )
     }
 }
@@ -206,6 +213,7 @@ private fun TopScreenPreviewLoading() {
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
+            navigateToReceiptDetail = {},
         )
     }
 }
@@ -221,6 +229,7 @@ private fun TopScreenPreviewNoData() {
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
+            navigateToReceiptDetail = {},
         )
     }
 }
