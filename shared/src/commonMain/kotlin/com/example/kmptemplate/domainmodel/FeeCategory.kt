@@ -16,7 +16,8 @@ data class FeeCategory(
     val name: String,
     val lastUsedAt: Instant,
 ) {
-    internal companion object {
-        val INITIAL_CATEGORIES = listOf("食費", "交通費", "通信費", "光熱費")
+    public companion object {
+        internal val INITIAL_CATEGORIES = listOf("食費", "交通費", "通信費", "光熱費")
+        public val NoCategoryLabel = "分類なし"
     }
 }

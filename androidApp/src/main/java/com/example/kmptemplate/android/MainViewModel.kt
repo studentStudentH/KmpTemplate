@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kmptemplate.android.uiState.HeaderState
 import com.example.kmptemplate.android.uiState.LoadingState
+import com.example.kmptemplate.domainmodel.FeeCategory
 import com.example.kmptemplate.domainmodel.KmpResult
 import com.example.kmptemplate.domainmodel.Receipt
 import com.example.kmptemplate.domainmodel.ReceiptCollection
@@ -12,6 +13,7 @@ import com.example.kmptemplate.domainmodel.chain
 import com.example.kmptemplate.repository.FeeCategoryRepository
 import com.example.kmptemplate.repository.ReceiptRepository
 import com.example.kmptemplate.util.KermitLogger
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -40,9 +42,26 @@ class MainViewModel(
     private val _endYearMonth = MutableStateFlow<YearMonth?>(null)
     val endYearMonth: StateFlow<YearMonth?> = _endYearMonth
 
+    private val _feeCategoryList = MutableStateFlow<List<FeeCategory>>(listOf())
+    val feeCategoryList: StateFlow<List<FeeCategory>> = _feeCategoryList
+
+    private val _selectedReceipt = MutableStateFlow<Receipt?>(null)
+    val selectedReceipt: StateFlow<Receipt?> = _selectedReceipt
+
     init {
         KermitLogger.d(TAG) { "init" }
         loadInitialReceipts()
+        viewModelScope.launch {
+            val result = feeCategoryRepository.getAllCategory()
+            when (result) {
+                is KmpResult.Failure -> {
+                    _headerState.value = HeaderState.Error("通信エラーが発生しました")
+                }
+                is KmpResult.Success -> {
+                    _feeCategoryList.value = result.value.getMostRecentlyUsedList()
+                }
+            }
+        }
     }
 
     // 初めてデータを取得する時に呼び出される
@@ -59,7 +78,7 @@ class MainViewModel(
                 }
                 is KmpResult.Success -> {
                     _initialLoadingState.value = LoadingState.Completed
-                    _receiptCollection.value = result.value
+                    updateReceiptCollection(result.value)
                 }
             }
         }
@@ -77,7 +96,7 @@ class MainViewModel(
                 }
                 is KmpResult.Success -> {
                     _headerState.value = HeaderState.None
-                    _receiptCollection.value = result.value
+                    updateReceiptCollection(result.value)
                 }
             }
         }
@@ -99,6 +118,14 @@ class MainViewModel(
         )
     }
 
+    private fun updateReceiptCollection(newReceiptCollection: ReceiptCollection) {
+        _receiptCollection.value = newReceiptCollection
+        _selectedReceipt.value?.let {
+            val selectedReceiptId = it.id
+            _selectedReceipt.value = newReceiptCollection.firstOrNull(selectedReceiptId)
+        }
+    }
+
     // try catchを後で消す
     override fun onStartYearMonthChanged(newStartYearMonth: YearMonth) {
         try {
@@ -118,6 +145,46 @@ class MainViewModel(
         } catch (e: IllegalArgumentException) {
             KermitLogger.e(TAG) { "onEndYearMonthChanged() e = $e" }
             _headerState.value = HeaderState.Error("入力が不正です")
+        }
+    }
+
+    fun onEditReceipt(receipt: Receipt) {
+        viewModelScope.launch {
+            _headerState.value = HeaderState.Normal(HEADER_UPDATE_MSG)
+            val result =
+                receiptRepository.update(
+                    receiptId = receipt.id,
+                    cost = receipt.cost,
+                    category = receipt.category,
+                    createdAt = receipt.createdAt,
+                )
+            when (result) {
+                is KmpResult.Failure -> {
+                    _headerState.value = HeaderState.Error(HEADER_UPDATE_FAILED_MSG)
+                }
+                is KmpResult.Success -> {
+                    _headerState.value = HeaderState.Normal(HEADER_UPDATE_SUCCESS_MSG)
+                    delay(DELAY_MILLIS) // ユーザがヘッダーを読めるように待機
+                    reloadReceipts()
+                }
+            }
+        }
+    }
+
+    fun onDeleteReceipt(receipt: Receipt) {
+        viewModelScope.launch {
+            _headerState.value = HeaderState.Normal(HEADER_DELETE_MSG)
+            val result = receiptRepository.delete(receipt)
+            when (result) {
+                is KmpResult.Failure -> {
+                    _headerState.value = HeaderState.Error(HEADER_DELETE_FAILED_MSG)
+                }
+                is KmpResult.Success -> {
+                    _headerState.value = HeaderState.Normal(HEADER_DELETE_SUCCESS_MSG)
+                    delay(DELAY_MILLIS) // ユーザがヘッダーを読めるように待機
+                    reloadReceipts()
+                }
+            }
         }
     }
 
@@ -144,7 +211,7 @@ class MainViewModel(
 
     override fun onReceiptSelected(receipt: Receipt) {
         KermitLogger.d(TAG) { "onReceiptSelected() receipt = $receipt" }
-        // ToDo()
+        _selectedReceipt.value = receipt
     }
 
     // Addを押すと数字入力画面が現れて数字を入れるとこの関数が呼び出される
@@ -190,6 +257,13 @@ class MainViewModel(
         const val HEADER_ADD_MSG = "adding..."
         const val HEADER_ADD_SUCCESS_MSG = "successfully added"
         const val HEADER_ADD_FAILED_MSG = "failed to add"
+        const val HEADER_UPDATE_MSG = "saving..."
+        const val HEADER_UPDATE_FAILED_MSG = "failed to save"
+        const val HEADER_UPDATE_SUCCESS_MSG = "successfully saved"
+        const val HEADER_DELETE_MSG = "deleting..."
+        const val HEADER_DELETE_FAILED_MSG = "failed to delete"
+        const val HEADER_DELETE_SUCCESS_MSG = "successfully deleted"
+        const val DELAY_MILLIS = 700L
     }
 }
 

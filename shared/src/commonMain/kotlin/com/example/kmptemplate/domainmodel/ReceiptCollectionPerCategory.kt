@@ -11,7 +11,7 @@ data class ReceiptCollectionPerCategory
     ) {
         init {
             if (receipts.isEmpty()) {
-                throw IllegalArgumentException("ReceiptCollectionPerCategoryには最低１つはreceiptは与えてくださいß")
+                throw IllegalArgumentException("ReceiptCollectionPerCategoryには最低１つはreceiptは与えてください")
             }
             val categories = receipts.map { it.category }.toSet()
             if (categories.size != 1) {
@@ -23,5 +23,5 @@ data class ReceiptCollectionPerCategory
             get() = receipts.sumOf { it.cost }
 
         val categoryName: String
-            get() = receipts.first().category?.name ?: "分類なし"
+            get() = receipts.first().category?.name ?: FeeCategory.NoCategoryLabel
     }

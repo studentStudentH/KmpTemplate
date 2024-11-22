@@ -112,6 +112,10 @@ data class ReceiptCollection(
         return ReceiptCollection(filteredList)
     }
 
+    fun firstOrNull(receiptId: String): Receipt? {
+        return receipts.firstOrNull { it.id == receiptId }
+    }
+
     companion object {
         fun makeInstanceForPreview(): ReceiptCollection {
             val receipt01 = Receipt.makeInstanceForPreview(1000, "食費")

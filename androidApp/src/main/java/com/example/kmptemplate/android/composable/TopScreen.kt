@@ -1,6 +1,5 @@
 package com.example.kmptemplate.android.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,6 +46,7 @@ fun TopScreen(
     startYearMonth: YearMonth,
     endYearMonth: YearMonth?,
     interactions: TopScreenInteractions,
+    navigateToReceiptDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showAddReceiptModal by remember { mutableStateOf(false) }
@@ -84,6 +84,7 @@ fun TopScreen(
                         startYearMonth,
                         endYearMonth,
                         interactions,
+                        navigateToReceiptDetail,
                         modifier.padding(it),
                     )
                 }
@@ -99,44 +100,6 @@ private fun MyFloatingActionButton(
 ) {
     FloatingActionButton(onClick = onClick, modifier = modifier) {
         Icon(Icons.Filled.Add, "Floating action button.")
-    }
-}
-
-@Composable
-private fun HeaderPanel(
-    headerState: HeaderState,
-    modifier: Modifier = Modifier,
-) {
-    when (headerState) {
-        is HeaderState.Error -> {
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
-                    .background(MaterialTheme.colorScheme.error),
-            ) {
-                Text(
-                    text = headerState.msg,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onError,
-                )
-            }
-        }
-        HeaderState.None -> {}
-        is HeaderState.Normal -> {
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-            ) {
-                Text(
-                    text = headerState.msg,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
-        }
     }
 }
 
@@ -162,6 +125,7 @@ private fun TopScreenContent(
     startYearMonth: YearMonth,
     endYearMonth: YearMonth?,
     interactions: TopScreenInteractions,
+    navigateToReceiptDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // ToDo: ユーザデータの一番早い時刻を代入するように修正すべき
@@ -191,7 +155,10 @@ private fun TopScreenContent(
                 ReceiptListItem(
                     modifier = Modifier.animateItem(),
                     receipt = receipt,
-                    onClick = { interactions.onReceiptSelected(receipt) },
+                    onClick = {
+                        interactions.onReceiptSelected(receipt)
+                        navigateToReceiptDetail()
+                    },
                 )
                 HorizontalDivider()
             }
@@ -230,6 +197,7 @@ private fun TopScreenPreviewNormal() {
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
+            navigateToReceiptDetail = {},
         )
     }
 }
@@ -245,6 +213,7 @@ private fun TopScreenPreviewLoading() {
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
+            navigateToReceiptDetail = {},
         )
     }
 }
@@ -260,6 +229,7 @@ private fun TopScreenPreviewNoData() {
             startYearMonth = YearMonth(2024, 1),
             endYearMonth = null,
             interactions = TopScreenInteractionsStub(),
+            navigateToReceiptDetail = {},
         )
     }
 }
