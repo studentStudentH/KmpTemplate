@@ -12,15 +12,15 @@ import com.example.kmptemplate.domainmodel.FeeCategory
 internal interface RoomReceiptDao {
     @Query(
         """
-        SELECT * FROM RoomReceipt JOIN FeeCategory
+        SELECT * FROM RoomReceipt LEFT OUTER JOIN FeeCategory
         ON RoomReceipt.categoryId = FeeCategory.id 
         WHERE RoomReceipt.id = :receiptId
     """,
     )
-    suspend fun loadById(receiptId: String): Map<RoomReceipt, FeeCategory>
+    suspend fun loadById(receiptId: String): Map<RoomReceipt, FeeCategory?>
 
-    @Query("SELECT * FROM RoomReceipt JOIN FeeCategory ON RoomReceipt.categoryId = FeeCategory.id")
-    suspend fun loadAll(): Map<RoomReceipt, FeeCategory>
+    @Query("SELECT * FROM RoomReceipt LEFT OUTER JOIN FeeCategory ON RoomReceipt.categoryId = FeeCategory.id")
+    suspend fun loadAll(): Map<RoomReceipt, FeeCategory?>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(receipts: List<RoomReceipt>)

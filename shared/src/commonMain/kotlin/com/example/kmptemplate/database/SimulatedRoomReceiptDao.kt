@@ -6,21 +6,21 @@ import kotlinx.coroutines.delay
 internal class SimulatedRoomReceiptDao(
     private val dataHolder: SimulatedDataHolder,
 ) : RoomReceiptDao {
-    override suspend fun loadById(receiptId: String): Map<RoomReceipt, FeeCategory> {
+    override suspend fun loadById(receiptId: String): Map<RoomReceipt, FeeCategory?> {
         delay(DELAY_MILLIS)
         val receipt = dataHolder.receiptList.first { it.id == receiptId }
-        val category = dataHolder.feeCategoryList.first { it.id == receipt.categoryId }
+        val category = dataHolder.feeCategoryList.firstOrNull { it.id == receipt.categoryId }
         return mapOf(receipt to category)
     }
 
-    override suspend fun loadAll(): Map<RoomReceipt, FeeCategory> {
+    override suspend fun loadAll(): Map<RoomReceipt, FeeCategory?> {
         delay(DELAY_MILLIS)
         val receipts = dataHolder.receiptList
         val categories = dataHolder.feeCategoryList
-        val map = mutableMapOf<RoomReceipt, FeeCategory>()
+        val map = mutableMapOf<RoomReceipt, FeeCategory?>()
         receipts.forEach { receipt ->
             receipt.categoryId?.let { categoryId ->
-                val category = categories.first { it.id == categoryId }
+                val category = categories.firstOrNull { it.id == categoryId }
                 map[receipt] = category
             }
         }
