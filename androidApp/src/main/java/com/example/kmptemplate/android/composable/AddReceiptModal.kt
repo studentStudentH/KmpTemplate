@@ -26,9 +26,12 @@ fun AddReceiptModal(
             modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(16.dp))
+            Spacer(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(16.dp),
+            )
             // Enterを押したらonAddが呼び出されるようにする
             CostInputTextField(
                 initialInputValue = initialInputValue,

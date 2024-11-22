@@ -12,7 +12,7 @@ import com.example.kmptemplate.android.MainViewModel
 @Composable
 fun MyNavHost(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
 ) {
     val navController = rememberNavController()
     val initialLoadingState by viewModel.initialLoadingState.collectAsStateWithLifecycle()
@@ -25,7 +25,7 @@ fun MyNavHost(
     NavHost(
         navController = navController,
         startDestination = Route.Top.name,
-        modifier = modifier
+        modifier = modifier,
     ) {
         composable(Route.Top.name) {
             TopScreen(
@@ -35,7 +35,7 @@ fun MyNavHost(
                 startYearMonth = startYearMonth,
                 endYearMonth = endYearMonth,
                 interactions = viewModel,
-                navigateToReceiptDetail =  { navController.navigate(Route.ReceiptDetail.name) }
+                navigateToReceiptDetail = { navController.navigate(Route.ReceiptDetail.name) },
             )
         }
         composable(Route.ReceiptDetail.name) {
@@ -56,7 +56,8 @@ fun MyNavHost(
 
 sealed interface Route {
     data object Top : Route
-    data object ReceiptDetail :Route
+
+    data object ReceiptDetail : Route
 
     val name: String
         get() {

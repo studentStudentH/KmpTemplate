@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MyNavHost(
                         modifier = Modifier,
-                        viewModel = viewModel
+                        viewModel = viewModel,
                     )
                 }
             }

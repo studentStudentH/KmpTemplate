@@ -158,7 +158,7 @@ private fun TopScreenContent(
                     onClick = {
                         interactions.onReceiptSelected(receipt)
                         navigateToReceiptDetail()
-                              },
+                    },
                 )
                 HorizontalDivider()
             }

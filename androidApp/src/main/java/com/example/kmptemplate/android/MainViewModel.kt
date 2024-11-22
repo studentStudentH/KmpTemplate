@@ -143,12 +143,13 @@ class MainViewModel(
     fun onEditReceipt(receipt: Receipt) {
         viewModelScope.launch {
             _headerState.value = HeaderState.Normal(HEADER_UPDATE_MSG)
-            val result = receiptRepository.update(
-                receiptId = receipt.id,
-                cost = receipt.cost,
-                category = receipt.category,
-                createdAt = receipt.createdAt,
-            )
+            val result =
+                receiptRepository.update(
+                    receiptId = receipt.id,
+                    cost = receipt.cost,
+                    category = receipt.category,
+                    createdAt = receipt.createdAt,
+                )
             when (result) {
                 is KmpResult.Failure -> {
                     _headerState.value = HeaderState.Error(HEADER_UPDATE_FAILED_MSG)

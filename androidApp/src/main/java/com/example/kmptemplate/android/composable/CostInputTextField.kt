@@ -21,7 +21,7 @@ fun CostInputTextField(
     initialInputValue: String,
     labelText: String,
     onDone: (cost: Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var inputText by remember { mutableStateOf(initialInputValue) }
     OutlinedTextField(
@@ -41,18 +41,18 @@ fun CostInputTextField(
         singleLine = true,
         maxLines = 1,
         keyboardOptions =
-        KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = androidx.compose.ui.text.input.ImeAction.Done,
-        ),
+            KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+            ),
         keyboardActions =
-        KeyboardActions(
-            onDone = {
-                if (isValidNumber(inputText)) {
-                    onDone(inputText.toInt())
-                }
-            },
-        ),
+            KeyboardActions(
+                onDone = {
+                    if (isValidNumber(inputText)) {
+                        onDone(inputText.toInt())
+                    }
+                },
+            ),
     )
 }
 

@@ -55,7 +55,7 @@ fun ReceiptDetailScreen(
     if (targetReceipt == null) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize(),
         ) {
             Text("何かがおかしいです")
         }
@@ -71,20 +71,21 @@ fun ReceiptDetailScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "戻る"
+                            contentDescription = "戻る",
                         )
                     }
-                }
+                },
             )
         },
-        modifier = modifier
+        modifier = modifier,
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             HeaderPanel(headerState)
             Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +95,7 @@ fun ReceiptDetailScreen(
                     cost = it.toString()
                     val editedReceipt = targetReceipt.copy(cost = cost.toInt())
                     onEditReceipt(editedReceipt)
-                         },
+                },
                 labelText = "価格",
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -104,16 +105,16 @@ fun ReceiptDetailScreen(
                 onSelected = {
                     val editedReceipt = targetReceipt.copy(category = it)
                     onEditReceipt(editedReceipt)
-                }
+                },
             )
             Spacer(modifier = Modifier.height(32.dp))
             val createdText = "作成日: " + targetReceipt.createdAt.toSystemLocalDateTime().dateTimeFormat()
             Text(
-                text = createdText
+                text = createdText,
             )
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = { onDelete(targetReceipt) }
+                onClick = { onDelete(targetReceipt) },
             ) {
                 Text("削除")
             }
@@ -127,7 +128,7 @@ fun ReceiptDetailScreen(
 private fun SelectCategoryMenu(
     feeCategoryList: List<FeeCategory>,
     selectedCategory: FeeCategory?,
-    onSelected: (FeeCategory?) -> Unit
+    onSelected: (FeeCategory?) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     // 表示用の状態
@@ -135,7 +136,7 @@ private fun SelectCategoryMenu(
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { expanded = !expanded },
     ) {
         OutlinedTextField(
             readOnly = true,
@@ -143,14 +144,15 @@ private fun SelectCategoryMenu(
             onValueChange = { },
             label = { Text("カテゴリ") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier.menuAnchor(
-                type = MenuAnchorType.PrimaryNotEditable,
-                enabled = true
-            )
+            modifier =
+                Modifier.menuAnchor(
+                    type = MenuAnchorType.PrimaryNotEditable,
+                    enabled = true,
+                ),
         )
         ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
             feeCategoryList.forEach { category ->
                 DropdownMenuItem(
@@ -159,7 +161,7 @@ private fun SelectCategoryMenu(
                         selectedCategoryState = category
                         expanded = false
                         onSelected(category)
-                    }
+                    },
                 )
             }
             // カテゴリを未入力にする方法を用意
@@ -169,29 +171,30 @@ private fun SelectCategoryMenu(
                     selectedCategoryState = null
                     expanded = false
                     onSelected(null)
-                }
+                },
             )
         }
     }
-
 }
 
 @PreviewLightDark
 @Composable
 private fun ReceiptDetailScreenPreview() {
-    val pseudoInstant = LocalDateTime(
-        year = 2023,
-        monthNumber = 10,
-        dayOfMonth = 10,
-        hour = 10,
-        minute = 10
-    ).toInstant(TimeZone.currentSystemDefault())
-    val sampleFeeCategories = listOf(
-        FeeCategory("1", "食費", pseudoInstant),
-        FeeCategory("2", "交通費", pseudoInstant),
-        FeeCategory("3", "通信費", pseudoInstant),
-        FeeCategory("4", "光熱費", pseudoInstant),
-    )
+    val pseudoInstant =
+        LocalDateTime(
+            year = 2023,
+            monthNumber = 10,
+            dayOfMonth = 10,
+            hour = 10,
+            minute = 10,
+        ).toInstant(TimeZone.currentSystemDefault())
+    val sampleFeeCategories =
+        listOf(
+            FeeCategory("1", "食費", pseudoInstant),
+            FeeCategory("2", "交通費", pseudoInstant),
+            FeeCategory("3", "通信費", pseudoInstant),
+            FeeCategory("4", "光熱費", pseudoInstant),
+        )
     MyApplicationTheme {
         Surface {
             ReceiptDetailScreen(
@@ -200,10 +203,8 @@ private fun ReceiptDetailScreenPreview() {
                 headerState = HeaderState.Normal("requesting..."),
                 onEditReceipt = {},
                 onBack = {},
-                onDelete = {}
+                onDelete = {},
             )
         }
     }
 }
-
-
