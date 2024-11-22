@@ -25,7 +25,7 @@ internal class RoomReceiptDataSource(
             KmpResult.Success(receipts)
         } catch (e: Exception) {
             val msg = e.message ?: UNKNOWN_ERROR_MSG
-            KermitLogger.e(TAG) { msg }
+            KermitLogger.e(TAG) { "getAllReceipts() failed. msg = $msg" }
             KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
@@ -50,7 +50,7 @@ internal class RoomReceiptDataSource(
             }
         } catch (e: Exception) {
             val msg = e.message ?: UNKNOWN_ERROR_MSG
-            KermitLogger.e(TAG) { msg }
+            KermitLogger.e(TAG) { "addItem() failed. msg = $msg" }
             return KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
@@ -88,7 +88,7 @@ internal class RoomReceiptDataSource(
             KmpResult.Success(receipt.copy(category = updatedCategory))
         } catch (e: Exception) {
             val msg = e.message ?: UNKNOWN_ERROR_MSG
-            KermitLogger.e(TAG) { msg }
+            KermitLogger.e(TAG) { "updateItem() failed. msg = $msg" }
             KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
@@ -100,7 +100,7 @@ internal class RoomReceiptDataSource(
             KmpResult.Success(Unit)
         } catch (e: Exception) {
             val msg = e.message ?: UNKNOWN_ERROR_MSG
-            KermitLogger.e(TAG) { msg }
+            KermitLogger.e(TAG) { "deleteReceipts() failed. msg = $msg" }
             KmpResult.Failure(KmpError.ServerError(msg))
         }
     }
