@@ -78,7 +78,7 @@ class MainViewModel(
                 }
                 is KmpResult.Success -> {
                     _initialLoadingState.value = LoadingState.Completed
-                    _receiptCollection.value = result.value
+                    updateReceiptCollection(result.value)
                 }
             }
         }
@@ -96,7 +96,7 @@ class MainViewModel(
                 }
                 is KmpResult.Success -> {
                     _headerState.value = HeaderState.None
-                    _receiptCollection.value = result.value
+                    updateReceiptCollection(result.value)
                 }
             }
         }
@@ -116,6 +116,14 @@ class MainViewModel(
             endYearMonthValue.year,
             endYearMonthValue.month,
         )
+    }
+
+    private fun updateReceiptCollection(newReceiptCollection: ReceiptCollection) {
+        _receiptCollection.value = newReceiptCollection
+        _selectedReceipt.value?.let {
+            val selectedReceiptId = it.id
+            _selectedReceipt.value = newReceiptCollection.firstOrNull(selectedReceiptId)
+        }
     }
 
     // try catchを後で消す
