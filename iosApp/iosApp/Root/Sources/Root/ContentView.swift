@@ -17,11 +17,8 @@ public struct ContentView: View {
     @State var texts: [String] = ["loading"]
 
     public var body: some View {
-        VStack {
-            ForEach(texts, id: \.self) { text in
-                Text(text)
-            }
-        }.task {
+        TopScreen()
+        .task {
             await loadData()
         }.task {
             KermitLoggerKt.d(tag: tag) { "show body" }
