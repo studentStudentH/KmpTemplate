@@ -10,7 +10,17 @@ import Foundation
 import KmpShared
 
 @MainActor
-class MainViewModel: ObservableObject {
+public protocol IMainViewModel: ObservableObject {
+    var headerState: HeaderState { get set }
+    var receiptCollection: ReceiptCollection { get set }
+    var feeCategoryList: [FeeCategory] { get set }
+    var selectedReceipt: Receipt? { get set }
+    
+    func onReceiptSelected(receipt: Receipt)
+}
+
+@MainActor
+public class MainViewModel: ObservableObject, IMainViewModel {
     private let tag = "MainViewModel"
     private let loadingMsg = "loading..."
     private let updatingMsg = "updating..."
@@ -24,12 +34,12 @@ class MainViewModel: ObservableObject {
     private let delayMilliSecond = 700
     private let feeCategoryRepository: FeeCategoryRepository
     private let receiptRepository: ReceiptRepository
-    @Published var headerState: HeaderState = .none
-    @Published var receiptCollection: ReceiptCollection = .init(receipts: [])
-    @Published var feeCategoryList: [FeeCategory] = []
-    @Published var selectedReceipt: Receipt?
+    @Published public var headerState: HeaderState = .none
+    @Published public var receiptCollection: ReceiptCollection = .init(receipts: [])
+    @Published public var feeCategoryList: [FeeCategory] = []
+    @Published public var selectedReceipt: Receipt?
 
-    init(feeCategoryRepository: FeeCategoryRepository, receiptRepository: ReceiptRepository) {
+    public init(feeCategoryRepository: FeeCategoryRepository, receiptRepository: ReceiptRepository) {
         self.feeCategoryRepository = feeCategoryRepository
         self.receiptRepository = receiptRepository
         Task.init {
@@ -81,7 +91,7 @@ class MainViewModel: ObservableObject {
         selectedReceipt = receiptCollection.firstOrNull(receiptId: selectedId)
     }
 
-    func onReceiptSelected(receipt: Receipt) {
+    public func onReceiptSelected(receipt: Receipt) {
         self.selectedReceipt = receipt
     }
 

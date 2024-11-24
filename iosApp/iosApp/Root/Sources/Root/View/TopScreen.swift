@@ -8,13 +8,18 @@ import SwiftUI
 import shared
 import KmpShared
 
-struct TopScreen: View {
+public struct TopScreen<T: IMainViewModel>: View {
+    @StateObject var viewModel: T
     @State var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
     @State var addingReceiptCostText: String = ""
     @State var isSheetPresented: Bool = false
     @State var costInputErrorMsg: String?
+    
+    public init(viewModel: T) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
 
-    var body: some View {
+    public var body: some View {
         let receipts = receiptCollection.sortByInstantDescending()
         let categorySummaryList = receiptCollection.splitByCategory().map {
             $0.makeCategorySummary()
@@ -126,6 +131,6 @@ struct TopScreen: View {
     }
 }
 
-#Preview {
-    TopScreen()
-}
+//#Preview {
+//    TopScreen()
+//}
