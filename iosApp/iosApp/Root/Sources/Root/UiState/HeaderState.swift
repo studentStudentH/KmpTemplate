@@ -6,7 +6,7 @@
 //
 
 
-enum HeaderState {
+public enum HeaderState {
     case none
 
     case normal(msg: String)
