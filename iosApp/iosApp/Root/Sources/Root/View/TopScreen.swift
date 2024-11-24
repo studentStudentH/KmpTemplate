@@ -10,6 +10,9 @@ import KmpShared
 
 struct TopScreen: View {
     @State var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
+    @State var addingReceiptCostText: String = ""
+    @State var isSheetPresented: Bool = false
+    @State var costInputErrorMsg: String?
 
     var body: some View {
         let receipts = receiptCollection.sortByInstantDescending()
@@ -36,10 +39,17 @@ struct TopScreen: View {
         }.toolbar {
             ToolbarItem(placement: .bottomBar) {
                 Button("Add") {
-                    // actionはtodo
+                    self.isSheetPresented = true
                 }
             }
-        }
+        }.sheet(
+            isPresented: $isSheetPresented,
+            onDismiss: {
+                self.addingReceiptCostText = ""
+                self.costInputErrorMsg = nil
+            },
+            content: { addingPanel() }
+        )
     }
 
     @ViewBuilder
@@ -70,8 +80,49 @@ struct TopScreen: View {
                 .padding(.all, 4)
             Spacer()
         }
-        .frame(width: .infinity)
         .background(backgroundColor.edgesIgnoringSafeArea(.horizontal))
+    }
+
+    @ViewBuilder
+    func addingPanel() -> some View {
+        VStack(
+            alignment: .leading,
+            spacing: 2
+        ) {
+            Text("価格を入力してください")
+            TextField("100", text: $addingReceiptCostText)
+                .textFieldStyle(.roundedBorder)
+                .keyboardType(.numberPad)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("完了") {
+                            onAddCompleted()
+                        }
+                    }
+                }
+            if let subText = self.costInputErrorMsg {
+                Text(subText)
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+            } else {
+                EmptyView()
+            }
+        }.padding()
+    }
+
+    func onAddCompleted() {
+        let intCost = Int(addingReceiptCostText)
+        guard let intCostValue = intCost else {
+            self.costInputErrorMsg = "数値を入力してください"
+            return
+        }
+        if intCostValue < 0 {
+            self.costInputErrorMsg = "正の数値を入力してください"
+            return
+        }
+        // addする処理をここに書く
+        self.isSheetPresented = false
     }
 }
 
