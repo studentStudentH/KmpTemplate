@@ -17,7 +17,7 @@ public struct ContentView: View {
     @State var texts: [String] = ["loading"]
 
     public var body: some View {
-        TopScreen()
+        Text("hello")
         .task {
             await loadData()
         }.task {

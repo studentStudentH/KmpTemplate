@@ -7,10 +7,10 @@
 import shared
 import KmpShared
 
-struct CategorySummary: Identifiable {
+public struct CategorySummary: Identifiable {
     let totalCost: Int
     let categoryName: String
-    var id: String {
+    public var id: String {
         get {
             self.categoryName
         }
