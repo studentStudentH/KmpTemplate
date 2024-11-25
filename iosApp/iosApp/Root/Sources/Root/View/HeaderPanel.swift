@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct HeaderPanel: View {
-    var headerState: HeaderState
+    let headerState: HeaderState
 
     var body: some View {
         switch headerState {
