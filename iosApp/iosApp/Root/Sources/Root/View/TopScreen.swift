@@ -10,7 +10,6 @@ import KmpShared
 
 public struct TopScreen<T: IMainViewModel>: View {
     @StateObject var viewModel: T
-    // @State var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
     @State var addingReceiptCostText: String = ""
     @State var isSheetPresented: Bool = false
     @State var costInputErrorMsg: String?
@@ -66,6 +65,7 @@ public struct TopScreen<T: IMainViewModel>: View {
             targetReceipt: targetReceipt,
             feeCategoryList: self.viewModel.feeCategoryList,
             onEditReceipt: self.viewModel.onEditReceipt,
+            onDeleteReceipt: self.viewModel.onDeleteReceipt,
             isShowingItemScreen: self.$isShowingItemScreen,
             headerState: self.$viewModel.headerState
         )

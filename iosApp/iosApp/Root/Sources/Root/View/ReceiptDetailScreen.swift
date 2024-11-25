@@ -10,9 +10,10 @@ import shared
 import KmpShared
 
 struct ReceiptDetailScreen: View {
-    var targetReceipt: Receipt
-    var feeCategoryList: [FeeCategory]
-    var onEditReceipt: (Receipt) -> Void
+    let targetReceipt: Receipt
+    let feeCategoryList: [FeeCategory]
+    let onEditReceipt: (Receipt) -> Void
+    let onDeleteReceipt: (Receipt) -> Void
     @Binding var isShowingItemScreen: Bool
     @Binding var headerState: HeaderState
     @State var selectedCategoryId: String
@@ -24,6 +25,7 @@ struct ReceiptDetailScreen: View {
         targetReceipt: Receipt,
         feeCategoryList: [FeeCategory],
         onEditReceipt: @escaping (Receipt) -> Void,
+        onDeleteReceipt: @escaping (Receipt) -> Void,
         isShowingItemScreen: Binding<Bool>,
         headerState: Binding<HeaderState>
     ) {
@@ -31,6 +33,7 @@ struct ReceiptDetailScreen: View {
         self.targetReceipt = targetReceipt
         self.feeCategoryList = feeCategoryList
         self.onEditReceipt = onEditReceipt
+        self.onDeleteReceipt = onDeleteReceipt
         self._isShowingItemScreen = isShowingItemScreen
         self._headerState = headerState
         self.receiptCostText = String(targetReceipt.cost)
@@ -46,8 +49,8 @@ struct ReceiptDetailScreen: View {
             categoryPicker()
             Spacer()
             Button("削除") {
-                // todo
-                self.isShowingItemScreen = false
+                // 削除してreloadしたタイミングで遷移元のreceiptがなくなり、前の画面に戻る挙動になる
+                self.onDeleteReceipt(self.targetReceipt)
             }.padding()
         }.onAppear {
             self.isShowingItemScreen = true
@@ -168,6 +171,7 @@ struct ReceiptDetailScreen: View {
         targetReceipt: pseudoReceipt!,
         feeCategoryList: pseudoFeeCategoryList,
         onEditReceipt: { _ in },
+        onDeleteReceipt: { _ in },
         isShowingItemScreen: .constant(true),
         headerState: .constant(.error(msg: "this is header"))
     )
