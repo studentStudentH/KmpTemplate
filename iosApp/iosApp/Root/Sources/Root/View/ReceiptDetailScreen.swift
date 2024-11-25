@@ -29,7 +29,6 @@ struct ReceiptDetailScreen: View {
         isShowingItemScreen: Binding<Bool>,
         headerState: Binding<HeaderState>
     ) {
-        KermitLoggerKt.d(tag: tag) { "init receipt: \(targetReceipt) " }
         self.targetReceipt = targetReceipt
         self.feeCategoryList = feeCategoryList
         self.onEditReceipt = onEditReceipt
