@@ -14,9 +14,6 @@ public protocol IMainViewModel: ObservableObject {
     var headerState: HeaderState { get set }
     var receiptCollection: ReceiptCollection { get set }
     var feeCategoryList: [FeeCategory] { get set }
-    var selectedReceipt: Receipt? { get set }
-
-    func onReceiptSelected(receipt: Receipt)
 
     func onAddReceipt(cost: Int)
 
@@ -43,7 +40,6 @@ public class MainViewModel: ObservableObject, IMainViewModel {
     @Published public var headerState: HeaderState = .none
     @Published public var receiptCollection: ReceiptCollection = .init(receipts: [])
     @Published public var feeCategoryList: [FeeCategory] = []
-    @Published public var selectedReceipt: Receipt?
 
     public init(feeCategoryRepository: FeeCategoryRepository, receiptRepository: ReceiptRepository) {
         self.feeCategoryRepository = feeCategoryRepository
@@ -89,24 +85,13 @@ public class MainViewModel: ObservableObject, IMainViewModel {
                 KermitLoggerKt.d(tag: tag) {
                     "receiptRepository.getAllReceipts() success value: \(kmpSuccess.value)"
                 }
-                updateReceiptCollection(newReceiptCollection: kmpSuccess.value)
+                self.receiptCollection = kmpSuccess.value
                 self.headerState = .none
             case .none:
                 KermitLoggerKt.e(tag: tag) { "receiptRepository.getAllReceipts() is nil" }
                 self.headerState = .error(msg: criticalErrorMsg)
             }
         }
-    }
-
-    private func updateReceiptCollection(newReceiptCollection: ReceiptCollection) {
-        self.receiptCollection = newReceiptCollection
-        guard let selectectItem = selectedReceipt else { return }
-        let selectedId = selectectItem.id
-        selectedReceipt = receiptCollection.firstOrNull(receiptId: selectedId)
-    }
-
-    public func onReceiptSelected(receipt: Receipt) {
-        self.selectedReceipt = receipt
     }
 
     public func onAddReceipt(cost: Int) {
