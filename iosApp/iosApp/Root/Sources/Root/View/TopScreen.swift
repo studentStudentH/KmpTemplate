@@ -14,6 +14,7 @@ public struct TopScreen<T: IMainViewModel>: View {
     @State var addingReceiptCostText: String = ""
     @State var isSheetPresented: Bool = false
     @State var costInputErrorMsg: String?
+    @State var isShowingItemScreen: Bool = false
 
     public init(viewModel: T) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -34,7 +35,7 @@ public struct TopScreen<T: IMainViewModel>: View {
                     Section(header: Text("明細一覧")) {
                         ForEach(receipts, id: \.id) { receipt in
                             NavigationLink(
-                                destination: { Text("moved") },
+                                destination: { itemScreen() },
                                 label: { ReceiptListItem(receipt: receipt) }
                             )
                         }
@@ -42,9 +43,11 @@ public struct TopScreen<T: IMainViewModel>: View {
                 }
             }
         }.toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Button("Add") {
-                    self.isSheetPresented = true
+            if !isShowingItemScreen {
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Add") {
+                        self.isSheetPresented = true
+                    }
                 }
             }
         }.sheet(
@@ -84,6 +87,17 @@ public struct TopScreen<T: IMainViewModel>: View {
             Spacer()
         }
         .background(backgroundColor.edgesIgnoringSafeArea(.horizontal))
+    }
+
+    @ViewBuilder
+    func itemScreen() -> some View {
+        Text("moved")
+            .onAppear {
+                self.isShowingItemScreen = true
+            }
+            .onDisappear {
+                self.isShowingItemScreen = false
+            }
     }
 
     @ViewBuilder
