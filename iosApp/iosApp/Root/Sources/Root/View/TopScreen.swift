@@ -10,7 +10,6 @@ import KmpShared
 
 public struct TopScreen<T: IMainViewModel>: View {
     @StateObject var viewModel: T
-    // @State var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
     @State var addingReceiptCostText: String = ""
     @State var isSheetPresented: Bool = false
     @State var costInputErrorMsg: String?
@@ -27,7 +26,7 @@ public struct TopScreen<T: IMainViewModel>: View {
         }
         NavigationView {
             VStack {
-                headerPanel()
+                HeaderPanel(headerState: viewModel.headerState)
                 List {
                     Section(header: Text("統計")) {
                         StatisticsPanel(categorySummaryList: categorySummaryList)
@@ -35,7 +34,7 @@ public struct TopScreen<T: IMainViewModel>: View {
                     Section(header: Text("明細一覧")) {
                         ForEach(receipts, id: \.id) { receipt in
                             NavigationLink(
-                                destination: { itemScreen() },
+                                destination: { itemScreen(targetReceipt: receipt) },
                                 label: { ReceiptListItem(receipt: receipt) }
                             )
                         }
@@ -61,43 +60,15 @@ public struct TopScreen<T: IMainViewModel>: View {
     }
 
     @ViewBuilder
-    func headerPanel() -> some View {
-        switch viewModel.headerState {
-        case .none:
-            EmptyView()
-        case .normal(let msg):
-            makeHeaderPanel(labelText: msg, labelColor: .white, backgroundColor: .blue)
-        case .error(let msg):
-            makeHeaderPanel(labelText: msg, labelColor: .white, backgroundColor: .red)
-        }
-    }
-
-    @ViewBuilder
-    func makeHeaderPanel(
-        labelText: String,
-        labelColor: Color,
-        backgroundColor: Color
-    ) -> some View {
-        /// edgesIgnoringSafeAreaを設定しないとヘッダーの上まで色がついてしまう
-        HStack {
-            Text(labelText)
-                .font(.headline)
-                .foregroundStyle(labelColor)
-                .padding(.all, 4)
-            Spacer()
-        }
-        .background(backgroundColor.edgesIgnoringSafeArea(.horizontal))
-    }
-
-    @ViewBuilder
-    func itemScreen() -> some View {
-        Text("moved")
-            .onAppear {
-                self.isShowingItemScreen = true
-            }
-            .onDisappear {
-                self.isShowingItemScreen = false
-            }
+    func itemScreen(targetReceipt: Receipt) -> some View {
+        ReceiptDetailScreen(
+            targetReceipt: targetReceipt,
+            feeCategoryList: self.viewModel.feeCategoryList,
+            onEditReceipt: self.viewModel.onEditReceipt,
+            onDeleteReceipt: self.viewModel.onDeleteReceipt,
+            isShowingItemScreen: self.$isShowingItemScreen,
+            headerState: self.$viewModel.headerState
+        )
     }
 
     @ViewBuilder
