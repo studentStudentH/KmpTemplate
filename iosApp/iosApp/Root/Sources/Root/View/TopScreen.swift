@@ -35,7 +35,7 @@ public struct TopScreen<T: IMainViewModel>: View {
                     Section(header: Text("明細一覧")) {
                         ForEach(receipts, id: \.id) { receipt in
                             NavigationLink(
-                                destination: { itemScreen() },
+                                destination: { itemScreen(targetReceipt: receipt) },
                                 label: { ReceiptListItem(receipt: receipt) }
                             )
                         }
@@ -61,14 +61,14 @@ public struct TopScreen<T: IMainViewModel>: View {
     }
 
     @ViewBuilder
-    func itemScreen() -> some View {
-        Text("moved")
-            .onAppear {
-                self.isShowingItemScreen = true
-            }
-            .onDisappear {
-                self.isShowingItemScreen = false
-            }
+    func itemScreen(targetReceipt: Receipt) -> some View {
+        ReceiptDetailScreen(
+            targetReceipt: targetReceipt,
+            feeCategoryList: self.viewModel.feeCategoryList,
+            onEditReceipt: self.viewModel.onEditReceipt,
+            isShowingItemScreen: self.$isShowingItemScreen,
+            headerState: self.$viewModel.headerState
+        )
     }
 
     @ViewBuilder
