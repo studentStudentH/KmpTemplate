@@ -27,7 +27,7 @@ public struct TopScreen<T: IMainViewModel>: View {
         }
         NavigationView {
             VStack {
-                headerPanel()
+                HeaderPanel(headerState: viewModel.headerState)
                 List {
                     Section(header: Text("統計")) {
                         StatisticsPanel(categorySummaryList: categorySummaryList)
@@ -58,35 +58,6 @@ public struct TopScreen<T: IMainViewModel>: View {
             },
             content: { addingPanel() }
         )
-    }
-
-    @ViewBuilder
-    func headerPanel() -> some View {
-        switch viewModel.headerState {
-        case .none:
-            EmptyView()
-        case .normal(let msg):
-            makeHeaderPanel(labelText: msg, labelColor: .white, backgroundColor: .blue)
-        case .error(let msg):
-            makeHeaderPanel(labelText: msg, labelColor: .white, backgroundColor: .red)
-        }
-    }
-
-    @ViewBuilder
-    func makeHeaderPanel(
-        labelText: String,
-        labelColor: Color,
-        backgroundColor: Color
-    ) -> some View {
-        /// edgesIgnoringSafeAreaを設定しないとヘッダーの上まで色がついてしまう
-        HStack {
-            Text(labelText)
-                .font(.headline)
-                .foregroundStyle(labelColor)
-                .padding(.all, 4)
-            Spacer()
-        }
-        .background(backgroundColor.edgesIgnoringSafeArea(.horizontal))
     }
 
     @ViewBuilder
