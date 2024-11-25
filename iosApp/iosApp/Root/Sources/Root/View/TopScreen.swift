@@ -10,18 +10,18 @@ import KmpShared
 
 public struct TopScreen<T: IMainViewModel>: View {
     @StateObject var viewModel: T
-    @State var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
+    // @State var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
     @State var addingReceiptCostText: String = ""
     @State var isSheetPresented: Bool = false
     @State var costInputErrorMsg: String?
-    
+
     public init(viewModel: T) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
 
     public var body: some View {
-        let receipts = receiptCollection.sortByInstantDescending()
-        let categorySummaryList = receiptCollection.splitByCategory().map {
+        let receipts = viewModel.receiptCollection.sortByInstantDescending()
+        let categorySummaryList = viewModel.receiptCollection.splitByCategory().map {
             $0.makeCategorySummary()
         }
         NavigationView {
@@ -59,9 +59,7 @@ public struct TopScreen<T: IMainViewModel>: View {
 
     @ViewBuilder
     func headerPanel() -> some View {
-        let headerState: HeaderState = .error(msg: "pseudo header msg")
-        // let headerState: HeaderState = .none
-        switch headerState {
+        switch viewModel.headerState {
         case .none:
             EmptyView()
         case .normal(let msg):
@@ -126,11 +124,46 @@ public struct TopScreen<T: IMainViewModel>: View {
             self.costInputErrorMsg = "正の数値を入力してください"
             return
         }
-        // addする処理をここに書く
+        viewModel.onAddReceipt(cost: intCostValue)
         self.isSheetPresented = false
     }
 }
 
-//#Preview {
-//    TopScreen()
-//}
+private class MainViewModelForPreview: IMainViewModel {
+    var headerState: HeaderState = .error(msg: "stub")
+    var receiptCollection: ReceiptCollection = ReceiptCollection.companion.makeInstanceForPreview()
+    var feeCategoryList: [FeeCategory] = [
+        FeeCategory(
+            id: "0",
+            name: "光熱費",
+            lastUsedAt: ClockHelperKt.getCurrentTime()
+        ),
+        FeeCategory(
+            id: "1",
+            name: "食費",
+            lastUsedAt: ClockHelperKt.getCurrentTime()
+        )
+    ]
+    var selectedReceipt: Receipt?
+
+    func onReceiptSelected(receipt: Receipt) {
+        // stub
+    }
+
+    func onAddReceipt(cost: Int) {
+        // stub
+    }
+
+    func onEditReceipt(editedReceipt: Receipt) {
+        // stub
+    }
+
+    func onDeleteReceipt(receipt: Receipt) {
+        // stub
+    }
+}
+
+#Preview {
+    let mainViewModel = MainViewModelForPreview()
+    TopScreen(viewModel: mainViewModel)
+}

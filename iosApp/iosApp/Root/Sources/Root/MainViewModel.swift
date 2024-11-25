@@ -15,8 +15,14 @@ public protocol IMainViewModel: ObservableObject {
     var receiptCollection: ReceiptCollection { get set }
     var feeCategoryList: [FeeCategory] { get set }
     var selectedReceipt: Receipt? { get set }
-    
+
     func onReceiptSelected(receipt: Receipt)
+
+    func onAddReceipt(cost: Int)
+
+    func onEditReceipt(editedReceipt: Receipt)
+
+    func onDeleteReceipt(receipt: Receipt)
 }
 
 @MainActor
@@ -47,10 +53,14 @@ public class MainViewModel: ObservableObject, IMainViewModel {
             let result = try? await feeCategoryRepository.getAllCategory()
             switch onEnum(of: result) {
             case .failure(let kmpFailure):
-                KermitLoggerKt.e(tag: tag) { "feeCategoryRepository.getAllCategory() failed error: \(kmpFailure.error.msg)" }
+                KermitLoggerKt.e(tag: tag) {
+                    "feeCategoryRepository.getAllCategory() failed error: \(kmpFailure.error.msg)"
+                }
                 self.headerState = .error(msg: networkErrorMsg)
             case .success(let kmpSuccess):
-                KermitLoggerKt.d(tag: tag) { "feeCategoryRepository.getAllCategory() success value: \(kmpSuccess.value)" }
+                KermitLoggerKt.d(tag: tag) {
+                    "feeCategoryRepository.getAllCategory() success value: \(kmpSuccess.value)"
+                }
                 self.feeCategoryList = kmpSuccess.value.getMostRecentlyUsedList()
                 self.headerState = .none
             case .none:
@@ -71,10 +81,14 @@ public class MainViewModel: ObservableObject, IMainViewModel {
             let result = try? await receiptRepository.getAllReceipts()
             switch onEnum(of: result) {
             case .failure(let kmpFailure):
-                KermitLoggerKt.e(tag: tag) { "receiptRepository.getAllReceipts() failed error: \(kmpFailure.error.msg)" }
+                KermitLoggerKt.e(tag: tag) {
+                    "receiptRepository.getAllReceipts() failed error: \(kmpFailure.error.msg)"
+                }
                 self.headerState = .error(msg: networkErrorMsg)
             case .success(let kmpSuccess):
-                KermitLoggerKt.d(tag: tag) { "receiptRepository.getAllReceipts() success value: \(kmpSuccess.value)" }
+                KermitLoggerKt.d(tag: tag) {
+                    "receiptRepository.getAllReceipts() success value: \(kmpSuccess.value)"
+                }
                 updateReceiptCollection(newReceiptCollection: kmpSuccess.value)
                 self.headerState = .none
             case .none:
@@ -95,11 +109,19 @@ public class MainViewModel: ObservableObject, IMainViewModel {
         self.selectedReceipt = receipt
     }
 
-    func onAddReceipt(cost: Int) {
-        onAddReceipt(cost: cost, feeCategoryRepository: self.feeCategoryRepository, receiptRepository: self.receiptRepository)
+    public func onAddReceipt(cost: Int) {
+        onAddReceipt(
+            cost: cost,
+            feeCategoryRepository: self.feeCategoryRepository,
+            receiptRepository: self.receiptRepository
+        )
     }
 
-    private func onAddReceipt(cost: Int, feeCategoryRepository: FeeCategoryRepository, receiptRepository: ReceiptRepository) {
+    private func onAddReceipt(
+        cost: Int,
+        feeCategoryRepository: FeeCategoryRepository,
+        receiptRepository: ReceiptRepository
+    ) {
         Task.init {
             self.headerState = .normal(msg: addingMsg)
             guard let categoryResult = try? await feeCategoryRepository.getAllCategory() else {
@@ -136,7 +158,7 @@ public class MainViewModel: ObservableObject, IMainViewModel {
         }
     }
 
-    func onEditReceipt(editedReceipt: Receipt) {
+    public func onEditReceipt(editedReceipt: Receipt) {
         onEditReceipt(editedReceipt: editedReceipt, receiptRepository: self.receiptRepository)
     }
 
@@ -165,7 +187,7 @@ public class MainViewModel: ObservableObject, IMainViewModel {
         }
     }
 
-    func onDeleteReceipt(receipt: Receipt) {
+    public func onDeleteReceipt(receipt: Receipt) {
         onDeleteReceipt(receipt: receipt, receiptRepository: receiptRepository)
     }
 
