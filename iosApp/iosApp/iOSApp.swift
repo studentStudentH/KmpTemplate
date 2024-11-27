@@ -6,7 +6,7 @@ import shared
 // swiftlint:disable:next type_name
 struct iOSApp: App {
     let viewModel: MainViewModel
-    
+
     init() {
         HelperKt.doInitKoin()
         viewModel = MainViewModel(
