@@ -140,26 +140,26 @@ pbxprojファイルのコンフリクトを防ぐためにiOSApp.swiftを除く�
 
 ## 各画面のスナップショット画像
 ### Android
-Top画面
+Top画面  
 <img src="snapshot/android/android_top_screen.png" width="200">
 
-明細詳細画面
+明細詳細画面  
 <img src="snapshot/android/android_receipt_detail_screen.png" width="200">
 
-明細追加画面
+明細追加画面  
 <img src="snapshot/android/android_add_receipt_screen.png" width="200">
 
-表示月変更画面
+表示月変更画面  
 <img src="snapshot/android/android_edit_month_screen.png" width="200">
 
 ### iOS
-Top画面
+Top画面  
 <img src="snapshot/ios/ios_top_screen.png" width="200">
 
-明細詳細画面
+明細詳細画面  
 <img src="snapshot/ios/ios_receipt_detail_screen.png" width="200">
 
-明細追加画面
+明細追加画面  
 <img src="snapshot/ios/ios_add_receipt_screen.png" width="200">
 
 
@@ -169,3 +169,5 @@ Top画面
 - iOSではデータを作成日でフィルタリングする機能が実装されていない
 - Android/iOSで明細のカテゴリを追加したり修正したりする機能を実装していない(Repository層にのみ実装がある状態)
 
+SHA512:
+2364c4b258c71526423c3089e727fa8e38ef5af63295275bde0d91702e4557ff0e0bd6cc17e3fafebe1fef75dcc09e8cd171522d8d8647e555c847f1334fbcef
