@@ -5,24 +5,24 @@
 
 ## 動作環境
 このアプリは以下の環境で動作します
-Android: SDKバージョン24以上
-iOS: iOS 16以降
+- Android: SDKバージョン24以上
+- iOS: iOS 16以降
 
 
 ## 環境構築
 ### ※注意
-こちらのプロジェクトはKotlin Multiplatformを用いています。そのためmaxOS上でしかビルドできません
+こちらのプロジェクトはKotlin Multiplatformを用いています。そのためmaxOS上でしかビルドできません。Android側であってもmacOSを使ってビルドする必要があります。
 
 ### 動作確認環境
 開発者は以下の環境で動作確認しています
 
-PC: macOS Sequoia バージョン15.0.1 (チップ: Apple M2)
-Android Studio: Android Studio Ladybug | 2024.2.1 Patch 1
-XCode: バージョン16.0
-Java: openjdk version "23.0.1" 2024-10-15
-Kotlin Plugin(Android Studioのプラグイン): 242.23339.11.2421.12483815-AS
-Kotlin Multiplatform Plugin(Android Studioのプラグイン): 0.8.3(242)-5
-Mint: 0.17.5
+- PC: macOS Sequoia バージョン15.0.1 (チップ: Apple M2)
+- Android Studio: Android Studio Ladybug | 2024.2.1 Patch 1
+- XCode: バージョン16.0
+- Java: openjdk version "23.0.1" 2024-10-15
+- Kotlin Plugin(Android Studioのプラグイン): 242.23339.11.2421.12483815-AS
+- Kotlin Multiplatform Plugin(Android Studioのプラグイン): 0.8.3(242)-5
+- Mint: 0.17.5
 
 ### 環境構築方法
 #### 0. 事前準備、kdoctorのインストール(オプション)
@@ -34,7 +34,7 @@ brew install kdoctor
 ```bash
 kdoctor
 ```
-注意：kdoctorを実行するとCocoaPodsがインストールされているかどうか表示されますが、本プロジェクトではCocoaPodsは利用していないのでインストールする必要はありません。
+**注意**：kdoctorを実行するとCocoaPodsがインストールされているかどうか表示されますが、本プロジェクトではCocoaPodsは利用していないのでインストールする必要はありません。
 
 #### 1. Kotlin Multiplatform環境の構築
 リンク先の公式サイトの記述を参考にしながら以下の4つをインストールしてください
@@ -46,7 +46,7 @@ https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-setup.html
 4. Kotlin Multiplatform plugin / Kotlin plugin
 
 #### 2. Mint / SwiftLintの導入
-本プロジェクトではswift側のLinterとしてSwiftLintを導入しており、iOS側のプロジェクトをビルドする際にSwiftLintを実行するように設定しています。そのためiOS側のビルドにはSwiftLintが必要になります。本プロジェクトではコマンドラインツールのパッケージマネージャーであるMintを使ったSwiftLintをインストールすることを想定しています。
+本プロジェクトではswift側のLinterとしてSwiftLintを導入しており、iOS側のプロジェクトをビルドする際にSwiftLintを実行するように設定しています。そのためiOS側のビルドにはSwiftLintが必要になります。本プロジェクトではコマンドラインツールのパッケージマネージャーであるMintを使ってSwiftLintをインストールすることを想定しています。
 まず以下のコマンドでMintをインストールします
 ```bash
 brew install mint
@@ -59,16 +59,16 @@ mint bootstrap
 
 ## アプリのビルド
 ### KMPのビルド環境の指定
-ビジネスロジック部分を実装したKMPは各OSのビルド環境とは独立して存在します。プロジェクトのルートディレクトリにあるgradle.propertiesファイル内にある以下の部分の記述を書き換えることでKMPのビルド環境を変えることができます
+ビジネスロジック部分を実装したKMPは各OSのビルド環境とは独立して存在します。プロジェクトのルートディレクトリにある`gradle.properties`ファイル内にある以下の部分の記述を書き換えることでKMPのビルド環境を変えることができます
 ```
 #BuildKonfig
 ## dev, release
 buildkonfig.flavor=dev
 ```
-buildkonfig.flavorにdevを指定すると開発用のインスタンスでビルドされます。`buildkonfig.flavor=dev`の場合、ユーザが入力したデータはモバイル端末のオンメモリで保存されるようになり、アプリをキルすると状態がリセットされます。`buildkonfig.flavor=release`の場合、ユーザが入力したデータはモバイル端末のファイルに保存されるため、アプリをキルしたあとも状態が永続化されるようになります。
+buildkonfig.flavorにdevを指定すると開発用のインスタンスでビルドされます。`buildkonfig.flavor=dev`の場合、ユーザが入力したデータはモバイル端末のオンメモリで保存されるようになります。そのため、アプリを閉じると状態がリセットされます。`buildkonfig.flavor=release`の場合、ユーザが入力したデータはモバイル端末のファイルに保存されます。そのため、アプリを閉じたあとも状態が永続化されるようになります。
 
 #### 注意
-本プロジェクトの構成では各OSのビルド環境とKMP部分の実装のビルド環境は同期しません。例えばAndroid側のBuildVariantをreleaseに変更してもgradle.propertiesの値をreleaseに書き換えない限り、ユーザ入力データは永続化されない設定になります。
+本プロジェクトの構成では各OSのビルド環境とKMP部分の実装のビルド環境は同期しません。例えばAndroid側のBuildVariantをreleaseに変更してもgradle.propertiesの値をreleaseに書き換えない限り、ユーザ入力データは永続化されません。
 
 ### Androidアプリのビルド
 特別な手続きは必要ありません。Android Studioから一般のAndroidアプリをビルドするときと同じようにビルドしてください
@@ -126,7 +126,7 @@ classDiagram
 ```
 
 ### GUIアーキテクチャについて
-本プロジェクトはAndroid/iOS側両方で一般的なMVVMパターンを採用しています。ViewについてはAndroid側はJetpack Composeを、iOS側ではSwiftUIを利用しています。ViewModelが用いるデータはRepository層から得られます。Repository層はDomainModelをViewModelに提供する役割やローカル/リモートのアクセス先の管理、キャッシュ機構などを担います。DataSource/Dao層はデータへのアクセス方法の抽象化を担います。
+本プロジェクトはAndroid/iOS側の両方で一般的なMVVMパターンを採用しています。ViewについてはAndroid側はJetpack Composeを、iOS側ではSwiftUIを利用しています。ViewModelが用いるデータはRepository層から得られます。Repository層はDomainModelをViewModelに提供する役割やローカル/リモートのアクセス先の管理、キャッシュ機構などを担います。DataSource/Dao層はデータへのアクセス方法の抽象化を担います。
 
 ### KMPで共有する部分
 本プロジェクトではRepository、DataSource, Dao, DomainモデルをKMPで実装することでAndroid/iOSで共有しています(sharedモジュール)。sharedモジュールはXCFrameworkとしてビルドされてiOS側のプロジェクトで利用されます。
@@ -136,7 +136,7 @@ pbxprojファイルのコンフリクトを防ぐためにiOSApp.swiftを除く�
 
 ### 検討したけれど採用しなかった構成
 - ViewModelの共通化は行いませんでした。ViewModelを共通化すると各OSのView側の都合で状態の持ち方を変えようとしても修正が難しいためです
-- 本プロジェクトではそれぞれのOSごとにViewModelが1つだけ使っており、画面ごとにViewModelを用意しませんでした。この理由は実装効率です。画面数が少ないことがわかっていたので実装工数を削減するためにこのような構成を取りました
+- 本プロジェクトではそれぞれのOSごとにViewModelが1つだけ使っており、画面ごとにViewModelを用意しませんでした。理由は実装効率です。画面数が少ないことがわかっていたので実装工数を削減するためにこのような構成を取りました
 
 ## 各画面のスナップショット画像
 ### Android
@@ -164,9 +164,9 @@ Top画面
 
 
 ## 未実装項目
-時間的な制約により以下の項目が未実装状態になっています
+時間的な制約により以下の項目が未実装になっています
 - Android/iOSでTop画面でPull to Refreshできない
-- iOSではデータを作成日でフィルタリングする機能が実装されていない
+- iOSでは明細データを作成日でフィルタリングする機能が実装されていない
 - Android/iOSで明細のカテゴリを追加したり修正したりする機能を実装していない(Repository層にのみ実装がある状態)
 
 SHA512:
