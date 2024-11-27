@@ -1,6 +1,6 @@
 # ReadMe
 ## このアプリは何？
-このアプリはAndroid/iOS向けの家計簿アプリです。食費や光熱費などの日々の出費を記録、閲覧できます。Kotlin Multiplatformという技術を利用することで、ビジネスロジックの実装をAndroid/iOSで共有している点が特徴です。
+このアプリはAndroid/iOS向けの家計簿アプリです。食費や光熱費などの日々の出費を記録、閲覧できます。Kotlin Multiplatformという技術を利用することで、ビジネスロジックの実装をAndroid/iOSで共有している点が特徴です。画面のデザインについては各OSごとに標準的な画面を作成しようと意図しています。
 
 
 ## 動作環境
@@ -140,7 +140,28 @@ pbxprojファイルのコンフリクトを防ぐためにiOSApp.swiftを除く�
 
 ## 各画面のスナップショット画像
 ### Android
+Top画面
+<img src="snapshot/android/android_top_screen.png" width="200">
+
+明細詳細画面
+<img src="snapshot/android/android_receipt_detail_screen.png" width="200">
+
+明細追加画面
+<img src="snapshot/android/android_add_receipt_screen.png" width="200">
+
+表示月変更画面
+<img src="snapshot/android/android_edit_month_screen.png" width="200">
+
 ### iOS
+Top画面
+<img src="snapshot/ios/ios_top_screen.png" width="200">
+
+明細詳細画面
+<img src="snapshot/ios/ios_receipt_detail_screen.png" width="200">
+
+明細追加画面
+<img src="snapshot/ios/ios_add_receipt_screen.png" width="200">
+
 
 ## 未実装項目
 時間的な制約により以下の項目が未実装状態になっています
